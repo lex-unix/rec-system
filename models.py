@@ -157,11 +157,11 @@ class OperatorRankingModel(tf.keras.Model):
 
         self.ratings = tf.keras.Sequential(
             [
-                tf.keras.layers.Dense(256),
+                tf.keras.layers.Dense(128),
                 tf.keras.layers.BatchNormalization(),
                 tf.keras.layers.Activation("relu"),
                 tf.keras.layers.Dropout(0.5),
-                tf.keras.layers.Dense(128),
+                tf.keras.layers.Dense(64),
                 tf.keras.layers.BatchNormalization(),
                 tf.keras.layers.Activation("relu"),
                 tf.keras.layers.Dropout(0.5),
