@@ -2,6 +2,8 @@
 	import { getContext } from 'svelte';
 	import { type Dialog, melt } from '@melt-ui/svelte';
 	import type { Size } from './Dialog.svelte';
+	import { flyAndScale } from '$transitions';
+	import { fade } from 'svelte/transition';
 
 	const size = getContext<Size>('size');
 	const {
@@ -14,6 +16,7 @@
 	{#if $open}
 		<div
 			use:melt={$overlay}
+			transition:fade={{ duration: 150 }}
 			class="fixed inset-0 z-50 bg-black/10 backdrop-blur-sm"
 		/>
 		<div
@@ -21,6 +24,7 @@
 		>
 			<div
 				use:melt={$content}
+				transition:flyAndScale={{ duration: 150, y: 8, start: 0.96 }}
 				class:sm={size === 'sm'}
 				class:md={size === 'md'}
 				class:lg={size === 'lg'}
