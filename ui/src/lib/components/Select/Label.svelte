@@ -7,6 +7,6 @@
 	} = getContext<Select>('select');
 </script>
 
-<label use:melt={$label} class="text-navy-400 mb-1 block">
+<label use:melt={$label} class="mb-1 block text-navy-400">
 	<slot />
 </label>

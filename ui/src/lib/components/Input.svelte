@@ -22,6 +22,8 @@
 	{value}
 	{required}
 	{placeholder}
-	class="border-navy-200/10 bg-navy-800 text-navy-50 placeholder:text-navy-500 hover:border-navy-200/25 focus:border-navy-200/25 focus:ring-navy-600 h-10 w-full max-w-[420px] rounded-md border px-3 py-2 focus:outline-none focus:ring-2"
+	autocomplete="off"
+	spellcheck="false"
+	class="h-10 w-full max-w-[420px] rounded-md border border-navy-200/10 bg-navy-800 px-3 py-2 text-navy-50 placeholder:text-navy-500 hover:border-navy-200/25 focus:border-navy-200/25 focus:outline-none focus:ring-2 focus:ring-navy-600"
 	on:input={change}
 />

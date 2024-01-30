@@ -12,7 +12,7 @@
 
 <div
 	use:melt={$option({ value, label })}
-	class="text-navy-300 data-[highlighted]:bg-navy-700 data-[selected]:bg-navy-700 data-[highlighted]:text-navy-50 data-[selected]:text-navy-50 relative cursor-pointer rounded-lg px-2 py-2 capitalize"
+	class="relative cursor-pointer rounded-lg px-2 py-2 capitalize text-navy-300 data-[highlighted]:bg-navy-700 data-[selected]:bg-navy-700 data-[highlighted]:text-navy-50 data-[selected]:text-navy-50"
 >
 	{label}
 </div>
