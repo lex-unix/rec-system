@@ -7,7 +7,8 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		alias: {
-			$components: './src/lib/components'
+			$components: './src/lib/components',
+			$transitions: './src/lib/transitions'
 		}
 	}
 };
