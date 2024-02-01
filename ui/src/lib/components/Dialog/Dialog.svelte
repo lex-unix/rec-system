@@ -3,8 +3,9 @@
 </script>
 
 <script lang="ts">
-	import { setContext } from 'svelte';
+	import { createEventDispatcher, setContext } from 'svelte';
 	import { createDialog } from '@melt-ui/svelte';
+	import type { ChangeFn } from '@melt-ui/svelte/internal/helpers';
 
 	export let size: Size = 'md';
 
@@ -16,9 +17,21 @@
 		$open = false;
 	}
 
+	const dispatch = createEventDispatcher();
+
+	const onOpenChange: ChangeFn<boolean> = ({ next, curr }) => {
+		if (curr === true) {
+			dispatch('close');
+		} else {
+			dispatch('open');
+		}
+		return next;
+	};
+
 	const ctx = createDialog({
 		forceVisible: true,
-		closeOnOutsideClick: true
+		closeOnOutsideClick: true,
+		onOpenChange
 	});
 	setContext('dialog', ctx);
 	setContext('size', size);
