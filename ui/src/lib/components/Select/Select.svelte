@@ -1,22 +1,22 @@
 <script lang="ts">
-	import { setContext } from 'svelte';
-	import { createSelect } from '@melt-ui/svelte';
+  import { setContext } from 'svelte';
+  import { createSelect } from '@melt-ui/svelte';
 
-	export let selected: string;
+  export let selected: string;
 
-	const ctx = createSelect<string>({
-		loop: false,
-		forceVisible: true,
-		positioning: { placement: 'bottom', fitViewport: true, sameWidth: true }
-	});
+  const ctx = createSelect<string>({
+    loop: false,
+    forceVisible: true,
+    positioning: { placement: 'bottom', fitViewport: true, sameWidth: true }
+  });
 
-	setContext('select', ctx);
+  setContext('select', ctx);
 
-	const {
-		states: { selected: selectedStore }
-	} = ctx;
+  const {
+    states: { selected: selectedStore }
+  } = ctx;
 
-	$: selected = $selectedStore?.value || '';
+  $: selected = $selectedStore?.value || '';
 </script>
 
 <slot />

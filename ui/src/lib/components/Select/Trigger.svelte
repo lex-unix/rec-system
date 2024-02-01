@@ -1,27 +1,27 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
-	import { type Select, melt } from '@melt-ui/svelte';
-	import { ChevronDown } from 'lucide-svelte';
-	import { cn } from '$lib';
+  import { getContext } from 'svelte';
+  import { type Select, melt } from '@melt-ui/svelte';
+  import { ChevronDown } from 'lucide-svelte';
+  import { cn } from '$lib';
 
-	export let label: string;
-	let className = '';
-	export { className as class };
+  export let label: string;
+  let className = '';
+  export { className as class };
 
-	const {
-		elements: { trigger },
-		states: { selectedLabel }
-	} = getContext<Select>('select');
+  const {
+    elements: { trigger },
+    states: { selectedLabel }
+  } = getContext<Select>('select');
 </script>
 
 <button
-	use:melt={$trigger}
-	aria-label="Issue type"
-	class={cn(
-		'flex h-10 w-[220px] items-center justify-between rounded-md border border-navy-200/10 bg-navy-800 px-3 py-2 opacity-70 transition-opacity hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-navy-600 aria-expanded:opacity-60 aria-expanded:ring-transparent',
-		className
-	)}
+  use:melt={$trigger}
+  aria-label="Issue type"
+  class={cn(
+    'flex h-10 w-[220px] items-center justify-between rounded-md border border-navy-200/10 bg-navy-800 px-3 py-2 opacity-70 transition-opacity hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-navy-600 aria-expanded:opacity-60 aria-expanded:ring-transparent',
+    className
+  )}
 >
-	{$selectedLabel || label}
-	<ChevronDown class="h-5 w-5" />
+  {$selectedLabel || label}
+  <ChevronDown class="h-5 w-5" />
 </button>
