@@ -54,34 +54,37 @@
 
 <div class="h-full w-full overflow-hidden">
 	<div
-		class="flex h-20 items-center justify-between border-b border-navy-200/10 px-4"
+		class="border-navy-200/10 relative flex h-20 items-center justify-between border-b px-4"
 	>
-		<div></div>
-		<h1 class="text-center text-lg font-medium capitalize">{issue?.type}</h1>
-		<div class="flex gap-5 pl-5">
-			<Popover>
-				<PopoverTrigger class="rounded-full p-2">
-					<InfoIcon slot="icon" class="square-5" />
-				</PopoverTrigger>
-				<PopoverContent>
-					<IssueInfo info={issue} />
-				</PopoverContent>
-			</Popover>
-			<Dropdown>
-				<DropdownTrigger class="rounded-full p-2">
-					<MoreHorizontalIcon class="square-5" />
-				</DropdownTrigger>
-				<DropdownMenu>
-					<DropdownItem on:select={() => dialog.show()}>
-						<CheckCircle2Icon class="mr-3 square-5" />
-						Mark resolved
-					</DropdownItem>
-					<DropdownItem on:select={del}>
-						<Trash2Icon class="mr-3 square-5" />
-						Delete ticket
-					</DropdownItem>
-				</DropdownMenu>
-			</Dropdown>
+		<h1 class="w-full text-center text-lg font-medium capitalize">
+			{issue?.type}
+		</h1>
+		<div class="absolute inset-y-0 right-4 pl-5">
+			<div class="flex h-full items-center gap-5">
+				<Popover>
+					<PopoverTrigger class="rounded-full p-2">
+						<InfoIcon slot="icon" class="square-5" />
+					</PopoverTrigger>
+					<PopoverContent>
+						<IssueInfo info={issue} />
+					</PopoverContent>
+				</Popover>
+				<Dropdown>
+					<DropdownTrigger class="rounded-full p-2">
+						<MoreHorizontalIcon class="square-5" />
+					</DropdownTrigger>
+					<DropdownMenu>
+						<DropdownItem on:select={() => dialog.show()}>
+							<CheckCircle2Icon class="square-5 mr-3" />
+							Mark resolved
+						</DropdownItem>
+						<DropdownItem on:select={del}>
+							<Trash2Icon class="square-5 mr-3" />
+							Delete ticket
+						</DropdownItem>
+					</DropdownMenu>
+				</Dropdown>
+			</div>
 		</div>
 	</div>
 	<div class="hidden h-full w-full place-items-center lg:grid">
