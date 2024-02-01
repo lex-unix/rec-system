@@ -68,7 +68,7 @@
 				<li>
 					<a
 						href="/issues/{id}"
-						class="line-clamp-1 w-full rounded-md px-5 py-3 hover:bg-navy-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#479EFA]"
+						class="line-clamp-1 block w-full rounded-md px-5 py-3 hover:bg-navy-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#479EFA]"
 						class:active={$page.params.id
 							? parseInt($page.params.id) === id
 							: false}

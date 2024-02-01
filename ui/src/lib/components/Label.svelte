@@ -3,6 +3,6 @@
 	export { htmlFor as for };
 </script>
 
-<label for={htmlFor} class="text-navy-400 mb-1 block">
+<label for={htmlFor} class="mb-1 block text-navy-400">
 	<slot />
 </label>

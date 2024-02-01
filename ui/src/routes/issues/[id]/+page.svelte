@@ -54,7 +54,7 @@
 
 <div class="h-full w-full overflow-hidden">
 	<div
-		class="border-navy-200/10 relative flex h-20 items-center justify-between border-b px-4"
+		class="relative flex h-20 items-center justify-between border-b border-navy-200/10 px-4"
 	>
 		<h1 class="w-full text-center text-lg font-medium capitalize">
 			{issue?.type}
@@ -75,11 +75,11 @@
 					</DropdownTrigger>
 					<DropdownMenu>
 						<DropdownItem on:select={() => dialog.show()}>
-							<CheckCircle2Icon class="square-5 mr-3" />
+							<CheckCircle2Icon class="mr-3 square-5" />
 							Mark resolved
 						</DropdownItem>
 						<DropdownItem on:select={del}>
-							<Trash2Icon class="square-5 mr-3" />
+							<Trash2Icon class="mr-3 square-5" />
 							Delete ticket
 						</DropdownItem>
 					</DropdownMenu>
