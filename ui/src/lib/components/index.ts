@@ -12,7 +12,7 @@ export { default as DialogTitle } from './Dialog/Title.svelte';
 export { default as DialogDescription } from './Dialog/Description.svelte';
 export { default as DialogContent } from './Dialog/Content.svelte';
 export { default as DialogClose } from './Dialog/Close.svelte';
-export { default as ChatInfo } from './ChatInfo.svelte';
+export { default as IssueInfo } from './IssueInfo.svelte';
 export { default as Popover } from './Popover/Popover.svelte';
 export { default as PopoverTrigger } from './Popover/Trigger.svelte';
 export { default as PopoverContent } from './Popover/Content.svelte';

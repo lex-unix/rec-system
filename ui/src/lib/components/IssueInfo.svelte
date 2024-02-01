@@ -1,8 +1,22 @@
+<script context="module" lang="ts">
+	export type Info = {
+		status: string;
+		type: string;
+		subject: string;
+		description: string;
+		operatorName: string;
+		averageRating: number;
+		totalResolvedIssues: number;
+	};
+</script>
+
 <script lang="ts">
 	import { createTabs, melt } from '@melt-ui/svelte';
 	import { crossfade } from 'svelte/transition';
 	import { cubicInOut } from 'svelte/easing';
 	import ResizablePannel from './ResizablePannel.svelte';
+
+	export let info: Info;
 
 	const {
 		elements: { root, list, content, trigger },
@@ -54,22 +68,21 @@
 			</h3>
 			<div class="divide-y divide-navy-200/10">
 				<div class="space-y-1 py-4">
-					<p class="text-navy-400">Issue Status:</p>
-					<p class="text-navy-100">In progress</p>
+					<p class="text-navy-400">Issue status:</p>
+					<p class="capitalize text-navy-100">{info.status}</p>
 				</div>
 				<div class="space-y-1 py-4">
 					<p class="text-navy-400">Issue type:</p>
-					<p class="text-navy-100">Refund</p>
+					<p class="capitalize text-navy-100">{info.type}</p>
 				</div>
 				<div class="space-y-1 py-4">
 					<p class="text-navy-400">Issue subject:</p>
-					<p class="text-navy-100">Computer not working</p>
+					<p class="text-navy-100">{info.subject}</p>
 				</div>
 				<div class="space-y-1 py-4">
 					<p class="text-navy-400">Issue description:</p>
 					<p class="text-navy-100">
-						Consectetur esse aute nulla id aute duis. Cillum in commodo non in
-						occaecat ipsum proident.
+						{info.description}
 					</p>
 				</div>
 			</div>
@@ -81,15 +94,15 @@
 			<div class="divide-y divide-navy-200/10">
 				<div class="space-y-1 py-4">
 					<p class="text-navy-400">Full name:</p>
-					<p class="text-navy-100">Bob Martin</p>
+					<p class="text-navy-100">{info.operatorName}</p>
 				</div>
 				<div class="space-y-1 py-4">
 					<p class="text-navy-400">Average rating:</p>
-					<p class="text-navy-100">4.99</p>
+					<p class="text-navy-100">{info.averageRating}</p>
 				</div>
 				<div class="space-y-1 py-4">
 					<p class="text-navy-400">Resolved issues:</p>
-					<p class="text-navy-100">420</p>
+					<p class="text-navy-100">{info.totalResolvedIssues}</p>
 				</div>
 			</div>
 		</div>
