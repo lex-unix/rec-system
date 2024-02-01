@@ -21,11 +21,14 @@
 </script>
 
 <ResizablePannel duration={200}>
-	<div use:melt={$root} class="list w-[420px] max-w-xs text-sm">
+	<div
+		use:melt={$root}
+		class="list w-[420px] max-w-xs text-sm focus:outline-none"
+	>
 		<div
 			use:melt={$list}
-			class="mb-6 flex items-center justify-between overflow-x-auto rounded-md border border-navy-200/10 bg-navy-900 p-1"
-			aria-label="Manage your account"
+			class="mb-6 flex items-center justify-between overflow-x-auto rounded-md border border-navy-200/10 bg-navy-900 p-1 focus:outline-none"
+			aria-label="Ticket Info"
 		>
 			{#each triggers as triggerItem}
 				<button
@@ -45,7 +48,7 @@
 				</button>
 			{/each}
 		</div>
-		<div use:melt={$content('tab-1')}>
+		<div use:melt={$content('tab-1')} class="focus:outline-none">
 			<h3 class="border-b border-navy-200/10 pb-4 text-lg font-medium">
 				Issue details
 			</h3>
@@ -71,7 +74,7 @@
 				</div>
 			</div>
 		</div>
-		<div use:melt={$content('tab-2')}>
+		<div use:melt={$content('tab-2')} class="focus:outline-none">
 			<h3 class="border-b border-navy-200/10 pb-4 text-lg font-medium">
 				Operator details
 			</h3>

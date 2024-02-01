@@ -28,7 +28,7 @@
 				class:sm={size === 'sm'}
 				class:md={size === 'md'}
 				class:lg={size === 'lg'}
-				class="relative rounded-lg border border-navy-200/10 bg-navy-800 p-5 shadow-xl"
+				class="relative overflow-x-visible rounded-lg border border-navy-200/10 bg-navy-900 p-5 shadow-xl"
 			>
 				<div class="pb-5">
 					<div class="pb-2">

@@ -12,13 +12,15 @@
 	}
 </script>
 
-<div class="relative h-10 w-full rounded-md border border-navy-200/10">
+<div
+	class="border-navy-200/10 focus-within:border-navy-200/25 relative h-10 w-full rounded-md border"
+>
 	<div class="absolute left-3 top-1/2 -translate-y-1/2">
 		<SearchIcon class="text-navy-400 square-4" />
 	</div>
 	<input
 		type="search"
-		class="h-full w-full bg-transparent pl-10 placeholder:text-navy-400 focus:outline-none"
+		class="placeholder:text-navy-400 h-full w-full bg-transparent pl-10 focus:outline-none"
 		placeholder="Search..."
 		on:input={search}
 	/>
