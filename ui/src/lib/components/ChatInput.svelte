@@ -6,6 +6,8 @@
   const dispatch = createEventDispatcher();
 
   function send() {
+    if (!value) return;
+
     dispatch('send', { message: value });
     value = '';
   }
