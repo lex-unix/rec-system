@@ -35,8 +35,10 @@
   $: issues = $initIssues;
 
   function filter(e: CustomEvent<{ search: string }>) {
-    issues = $initIssues.filter(c =>
-      c.type.toLowerCase().includes(e.detail.search.toLowerCase())
+    issues = $initIssues.filter(
+      c =>
+        c.type.toLowerCase().includes(e.detail.search.toLowerCase()) ||
+        c.description.toLowerCase().includes(e.detail.search.toLowerCase())
     );
   }
 
@@ -54,7 +56,7 @@
   }
 </script>
 
-<div class="flex h-screen max-h-screen">
+<div class="flex h-full max-h-full">
   <div
     class="relative hidden h-full shrink-0 flex-col border-r border-navy-200/10 md:flex md:w-[320px] md:max-w-[320px] md:flex-col lg:w-[400px] lg:max-w-[400px]"
   >
@@ -129,12 +131,10 @@
             </div>
             <div class="mt-5">
               <div class="flex items-center justify-end gap-4">
-                <Button on:click={cancel}>
-                  <XOctagonIcon slot="icon" class="square-4" />
+                <Button on:click={cancel} rightIcon={XOctagonIcon}>
                   Cancel
                 </Button>
-                <Button on:click={add}>
-                  <ArrowRightCircleIcon slot="icon" class="square-4" />
+                <Button on:click={add} rightIcon={ArrowRightCircleIcon}>
                   Procced
                 </Button>
               </div>
