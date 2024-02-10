@@ -1,7 +1,13 @@
 <script lang="ts">
   import { cn } from '$lib';
   import { createEventDispatcher } from 'svelte';
+  import type { Icon as LucideIcon } from 'lucide-svelte';
+  import type { ComponentType } from 'svelte';
 
+  type Icon = ComponentType<LucideIcon>;
+
+  export let leftIcon: Icon | undefined = undefined;
+  export let rightIcon: Icon | undefined = undefined;
   export let type: 'button' | 'submit' | 'reset' = 'button';
   let className: string = '';
   export { className as class };
@@ -21,8 +27,9 @@
     className
   )}
 >
-  <slot name="icon" />
+  <svelte:component this={leftIcon} class="square-4" />
   <span>
     <slot />
   </span>
+  <svelte:component this={rightIcon} class="square-4" />
 </button>
