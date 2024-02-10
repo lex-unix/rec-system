@@ -22,6 +22,6 @@ export { default as DropdownTrigger } from './Dropdown/Trigger.svelte';
 export { default as DropdownMenu } from './Dropdown/Menu.svelte';
 export { default as DropdownItem } from './Dropdown/Item.svelte';
 export { default as SearchBar } from './SearchBar.svelte';
-export { default as ResizablePanel } from './ResizablePannel.svelte';
+export { default as ResizablePanel } from './ResizablePanel.svelte';
 export { default as Button } from './Button.svelte';
 export { default as RatingSlider } from './RatingSlider.svelte';
