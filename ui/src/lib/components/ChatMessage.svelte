@@ -21,14 +21,14 @@
 
 <div
   use:scrollToLast
-  class="flex min-w-0 max-w-[58%] flex-col justify-center {me
-    ? 'self-end'
-    : 'self-start'}"
+  class="flex min-w-0 max-w-[58%] flex-col {me
+    ? 'items-end  self-end'
+    : 'items-start self-start'}"
 >
   <span class="rounded-md border border-navy-200/10 bg-navy-800 p-2">
     <slot />
   </span>
-  <div class="pt-1 text-xs text-gray-400 {me ? 'pr-0.5 text-right' : 'pl-0.5'}">
+  <div class="pt-1 text-xs text-gray-400 {me ? 'pr-0.5' : 'pl-0.5'}">
     {formatTime(date)}
   </div>
 </div>
