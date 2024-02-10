@@ -24,19 +24,29 @@
     Button,
     RatingSlider,
     Label,
-    Textarea
+    Textarea,
+    ChatMessage,
+    ChatInput
   } from '$components';
   import { page } from '$app/stores';
   import { issues } from '$lib';
+  import { messages as initMessage } from '$lib/data/messages';
   import { goto } from '$app/navigation';
 
   let rating: number;
   let review: string = '';
   let dialog: Dialog;
+  let messages = initMessage;
 
   $: issue = $issues.find(
     ({ id }) => id === parseInt($page.params.id)
   ) as unknown as Info;
+
+  function send(e: CustomEvent<{ message: string }>) {
+    const newMsg = { me: true, date: new Date(), text: e.detail.message };
+    messages.push(newMsg);
+    messages = messages;
+  }
 
   function del() {
     goto('/issues');
@@ -52,13 +62,14 @@
   }
 </script>
 
-<div class="h-full w-full overflow-hidden">
+<div class="w-full">
   <div
     class="relative flex h-20 items-center justify-between border-b border-navy-200/10 px-4"
   >
     <h1 class="w-full text-center text-lg font-medium capitalize">
       {issue?.type}
     </h1>
+
     <div class="absolute inset-y-0 right-4 pl-5">
       <div class="flex h-full items-center gap-5">
         <Popover>
@@ -87,10 +98,19 @@
       </div>
     </div>
   </div>
-  <div class="hidden h-full w-full place-items-center lg:grid">
-    Chat Placeholder
+
+  <div class="relative h-[calc(100%-80px)] w-full overflow-y-auto">
+    <div
+      class="flex max-h-[calc(100%-120px)] flex-col gap-4 overflow-y-auto p-4"
+    >
+      {#each messages as { me, date, text }}
+        <ChatMessage {me} {date}>{text}</ChatMessage>
+      {/each}
+    </div>
+    <ChatInput on:send={send} />
   </div>
 </div>
+
 <Dialog bind:this={dialog} on:close={reset} size="md">
   <DialogContent>
     <DialogTitle slot="title">Mark your issue as resolved</DialogTitle>
@@ -114,14 +134,10 @@
       </div>
     </div>
     <div class="ml-auto mt-5 flex w-full justify-end gap-5">
-      <Button on:click={() => dialog.dismiss()}>
-        <XCircleIcon slot="icon" class="square-4" />
+      <Button on:click={() => dialog.dismiss()} leftIcon={XCircleIcon}>
         Dismiss
       </Button>
-      <Button on:click={resolve}>
-        <CheckCircle2Icon slot="icon" class="square-4" />
-        Resolve
-      </Button>
+      <Button on:click={resolve} leftIcon={CheckCircle2Icon}>Resolve</Button>
     </div>
     <DialogClose />
   </DialogContent>
