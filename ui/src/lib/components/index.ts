@@ -25,3 +25,5 @@ export { default as SearchBar } from './SearchBar.svelte';
 export { default as ResizablePanel } from './ResizablePanel.svelte';
 export { default as Button } from './Button.svelte';
 export { default as RatingSlider } from './RatingSlider.svelte';
+export { default as ChatMessage } from './ChatMessage.svelte';
+export { default as ChatInput } from './ChatInput.svelte';
