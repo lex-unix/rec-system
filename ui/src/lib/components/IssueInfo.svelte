@@ -14,7 +14,7 @@
   import { createTabs, melt } from '@melt-ui/svelte';
   import { crossfade } from 'svelte/transition';
   import { cubicInOut } from 'svelte/easing';
-  import ResizablePannel from './ResizablePannel.svelte';
+  import ResizablePannel from './ResizablePanel.svelte';
 
   export let info: Info;
 
