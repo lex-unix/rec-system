@@ -21,7 +21,7 @@
 
 <div
   use:scrollToLast
-  class="flex min-w-0 flex-col md:max-w-[58%] lg:max-w-[500px] {me
+  class="flex min-w-0 max-w-[86%] flex-col md:max-w-[58%] lg:max-w-[500px] {me
     ? 'items-end  self-end'
     : 'items-start self-start'}"
 >
