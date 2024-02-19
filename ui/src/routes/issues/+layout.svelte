@@ -1,6 +1,7 @@
 <script lang="ts">
   import { issues as initIssues } from '$lib';
   import { SearchBar, IssueList, NewIssueDialog } from '$components';
+  import { addToast } from '$components/Toaster.svelte';
 
   $: issues = $initIssues;
 
@@ -10,6 +11,15 @@
         c.type.toLowerCase().includes(e.detail.search.toLowerCase()) ||
         c.description.toLowerCase().includes(e.detail.search.toLowerCase())
     );
+  }
+
+  function addIssue() {
+    addToast({
+      data: {
+        title: 'Issue formed',
+        description: 'New issue is registered'
+      }
+    });
   }
 </script>
 
@@ -27,7 +37,7 @@
     </div>
     <div class="mt-auto h-20 max-h-20 w-full border-t border-t-navy-200/10">
       <div class="flex h-full items-center justify-center px-5">
-        <NewIssueDialog />
+        <NewIssueDialog on:add={addIssue} />
       </div>
     </div>
   </div>

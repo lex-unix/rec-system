@@ -21,6 +21,7 @@
   import { issues } from '$lib';
   import { goto } from '$app/navigation';
   import { createEventDispatcher } from 'svelte';
+  import { addToast } from './Toaster.svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -28,9 +29,15 @@
     ({ id }) => id === parseInt($page.params.id)
   ) as unknown as Info;
 
-  function del() {
+  function deleteIssue() {
     goto('/issues');
     $issues = $issues.filter(c => c.id !== parseInt($page.params.id));
+    addToast({
+      data: {
+        title: 'Issue deleted',
+        description: 'Issue successfully deleted from your list'
+      }
+    });
   }
 
   function resolve() {
@@ -69,7 +76,7 @@
             <CheckCircle2Icon class="mr-3 square-5" />
             Mark resolved
           </DropdownItem>
-          <DropdownItem on:select={del}>
+          <DropdownItem on:select={deleteIssue}>
             <Trash2Icon class="mr-3 square-5" />
             Delete ticket
           </DropdownItem>

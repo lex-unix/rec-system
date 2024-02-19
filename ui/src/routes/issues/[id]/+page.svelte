@@ -15,6 +15,7 @@
     ChatTopPanel
   } from '$components';
   import { messages as initMessage } from '$lib/data/messages';
+  import { addToast } from '$components/Toaster.svelte';
 
   let rating: number;
   let review: string = '';
@@ -28,6 +29,12 @@
   }
 
   function resolve() {
+    addToast({
+      data: {
+        title: 'Issue resolved',
+        description: 'Issue is now closed. Thank you for your feedback'
+      }
+    });
     dialog.dismiss();
   }
 
