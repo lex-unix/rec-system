@@ -1,8 +1,11 @@
 <script>
   import '../app.css';
+  import { Toaster } from '$components';
 </script>
 
 <slot />
+
+<Toaster />
 
 <style>
   :global(.no-scrollbar::-webkit-scrollbar) {

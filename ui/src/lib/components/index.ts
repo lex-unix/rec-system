@@ -35,3 +35,4 @@ export { default as IssueList } from './IssueList.svelte';
 export { default as ChatTopPanel } from './ChatTopPanel.svelte';
 export { default as MobileIssuesDrawer } from './MobileIssuesDrawer.svelte';
 export { default as NewIssueDialog } from './NewIssueDialog.svelte';
+export { default as Toaster } from './Toaster.svelte';
