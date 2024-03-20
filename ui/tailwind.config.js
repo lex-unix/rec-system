@@ -22,7 +22,7 @@ export default {
     }
   },
   plugins: [
-    plugin(function ({ matchUtilities, theme }) {
+    plugin(function({ matchUtilities, theme }) {
       matchUtilities(
         {
           square: value => ({
