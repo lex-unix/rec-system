@@ -7,8 +7,15 @@ const config = {
   kit: {
     adapter: adapter(),
     alias: {
-      $components: './src/lib/components',
-      $transitions: './src/lib/transitions'
+      $components: './ui/src/lib/components',
+      $transitions: './ui/src/lib/transitions'
+    },
+    files: {
+      assets: './ui/static',
+      lib: './ui/src/lib',
+      routes: './ui/src/routes',
+      appTemplate: './ui/src/app.html',
+      errorTemplate: './ui/src/error.html'
     }
   }
 };

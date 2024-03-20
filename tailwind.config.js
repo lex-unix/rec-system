@@ -2,7 +2,7 @@ import plugin from 'tailwindcss/plugin';
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./src/**/*.{html,svelte,js,ts}'],
+  content: ['./ui/src/**/*.{html,svelte,js,ts}'],
   theme: {
     extend: {
       colors: {
@@ -22,7 +22,7 @@ export default {
     }
   },
   plugins: [
-    plugin(function({ matchUtilities, theme }) {
+    plugin(function ({ matchUtilities, theme }) {
       matchUtilities(
         {
           square: value => ({
