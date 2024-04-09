@@ -1,10 +1,14 @@
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter
+from fastapi import HTTPException
+from fastapi import Response
 
-from app.api.dependencies import DatabaseDep, UserSessionDep
+from app.api.dependencies import DatabaseDep
+from app.api.dependencies import UserSessionDep
 from app.db import users
-from app.db.models import UserCreate, UserPublic
+from app.db.models import UserCreate
+from app.db.models import UserPublic
 
 router = APIRouter()
 

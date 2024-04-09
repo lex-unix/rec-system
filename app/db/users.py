@@ -1,6 +1,8 @@
-from sqlmodel import Session, select
+from sqlmodel import Session
+from sqlmodel import select
 
-from app.db.models import User, UserCreate
+from app.db.models import User
+from app.db.models import UserCreate
 from app.internal.hash import hash_password
 
 

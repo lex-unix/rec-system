@@ -1,8 +1,11 @@
 import os
 
-from sqlmodel import Session, create_engine, select
+from sqlmodel import Session
+from sqlmodel import create_engine
+from sqlmodel import select
 
-from app.db.models import User, UserCreate
+from app.db.models import User
+from app.db.models import UserCreate
 
 engine = create_engine(os.environ['DATABASE_URL'])
 

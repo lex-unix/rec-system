@@ -1,7 +1,9 @@
 from collections.abc import Generator
 from typing import Annotated
 
-from fastapi import Cookie, Depends, HTTPException
+from fastapi import Cookie
+from fastapi import Depends
+from fastapi import HTTPException
 from redis import Redis
 from sqlmodel import Session
 
