@@ -4,6 +4,7 @@ from fastapi import APIRouter
 from fastapi import HTTPException
 from fastapi import Response
 
+from app.api.dependencies import AuthorizeDep
 from app.api.dependencies import DatabaseDep
 from app.api.dependencies import UserSessionDep
 from app.db import users
@@ -49,4 +50,9 @@ async def login(
 
     session_id = user_session.create_session(user.id)  # type: ignore
     response.set_cookie(key='session_id', value=session_id, httponly=True)
+    return user
+
+
+@router.get('/me', response_model=UserPublic)
+async def me(user: AuthorizeDep):
     return user
