@@ -1,0 +1,3 @@
+[[tool.mypy.overrides]]
+module = "tensorflow_recommenders.*"
+ignore_missing_imports = true
