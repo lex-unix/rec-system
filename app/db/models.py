@@ -17,8 +17,13 @@ class UserRegister(SQLModel):
     full_name: str | None = None
 
 
+class UserLogin(SQLModel):
+    email: str
+    password: str
+
+
 class UserUpdate(UserBase):
-    email: str | None = None
+    email: str | None = None  # type: ignore
     password: str | None = None
 
 
