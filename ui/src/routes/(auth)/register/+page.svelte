@@ -1,31 +1,20 @@
 <script lang="ts">
   import { MailIcon, LockIcon, UserCircle2Icon } from 'lucide-svelte';
-  import type { User } from '$lib/types';
   import { user } from '$lib/stores';
   import { goto } from '$app/navigation';
+  import { register } from '$lib/api-utils';
 
   let fullName = '';
   let email = '';
   let password = '';
 
   async function submit() {
-    const response = await fetch('http://localhost:8000/users/register', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        fullName,
-        email,
-        password
-      })
-    });
+    const body = JSON.stringify({ fullName, email, password });
+    const response = await register(body);
     if (!response.ok) {
       return;
     }
-    const json: User = await response.json();
-    $user = json;
+    $user = response.data;
     goto('/issues');
   }
 </script>

@@ -1,29 +1,19 @@
 <script lang="ts">
   import { MailIcon, LockIcon } from 'lucide-svelte';
-  import type { User } from '$lib/types';
   import { user } from '$lib/stores';
   import { goto } from '$app/navigation';
+  import { login } from '$lib/api-utils';
 
   let email = '';
   let password = '';
 
   async function submit() {
-    const response = await fetch('http://localhost:8000/users/login', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        email,
-        password
-      })
-    });
+    const body = JSON.stringify({ email, password });
+    const response = await login(body);
     if (!response.ok) {
       return;
     }
-    const json: User = await response.json();
-    $user = json;
+    $user = response.data;
     goto('/issues');
   }
 </script>
