@@ -10,12 +10,16 @@ class CustomerModel(tf.keras.Model):
 
         self.customer_embedding = tf.keras.Sequential(
             [
-                tf.keras.layers.StringLookup(vocabulary=unique_customer_names, mask_token=None),
+                tf.keras.layers.StringLookup(
+                    vocabulary=unique_customer_names, mask_token=None
+                ),
                 tf.keras.layers.Embedding(len(unique_customer_names) + 1, 32),
             ]
         )
 
-        self.ticket_subject_vectorizer = tf.keras.layers.TextVectorization(max_tokens=max_tokens)
+        self.ticket_subject_vectorizer = tf.keras.layers.TextVectorization(
+            max_tokens=max_tokens
+        )
 
         self.ticket_subject_embedding = tf.keras.Sequential(
             [
@@ -43,7 +47,9 @@ class OperatorModel(tf.keras.Model):
 
         self.operator_embedding = tf.keras.Sequential(
             [
-                tf.keras.layers.StringLookup(vocabulary=unique_operator_names, mask_token=None),
+                tf.keras.layers.StringLookup(
+                    vocabulary=unique_operator_names, mask_token=None
+                ),
                 tf.keras.layers.Embedding(len(unique_operator_names) + 1, 32),
             ]
         )
@@ -127,15 +133,23 @@ class OperatorRankingModel(tf.keras.Model):
 
         self.user_embeddings = tf.keras.Sequential(
             [
-                tf.keras.layers.StringLookup(vocabulary=unique_customer_names, mask_token=None),
-                tf.keras.layers.Embedding(len(unique_customer_names) + 1, embedding_dimension),
+                tf.keras.layers.StringLookup(
+                    vocabulary=unique_customer_names, mask_token=None
+                ),
+                tf.keras.layers.Embedding(
+                    len(unique_customer_names) + 1, embedding_dimension
+                ),
             ]
         )
 
         self.movie_embeddings = tf.keras.Sequential(
             [
-                tf.keras.layers.StringLookup(vocabulary=unique_operator_names, mask_token=None),
-                tf.keras.layers.Embedding(len(unique_operator_names) + 1, embedding_dimension),
+                tf.keras.layers.StringLookup(
+                    vocabulary=unique_operator_names, mask_token=None
+                ),
+                tf.keras.layers.Embedding(
+                    len(unique_operator_names) + 1, embedding_dimension
+                ),
             ]
         )
 
@@ -165,7 +179,9 @@ class OperatorRankingModel(tf.keras.Model):
 class RankingModel(tfrs.models.Model):
     def __init__(self, unique_customer_names, unique_operator_names):
         super().__init__()
-        self.ranking_model = OperatorRankingModel(unique_customer_names, unique_operator_names)
+        self.ranking_model = OperatorRankingModel(
+            unique_customer_names, unique_operator_names
+        )
         self.task = tfrs.tasks.Ranking(
             loss=tf.keras.losses.MeanSquaredError(),
             metrics=[tf.keras.metrics.RootMeanSquaredError()],
