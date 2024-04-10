@@ -1,8 +1,19 @@
+import humps
 from sqlmodel import Field
 from sqlmodel import SQLModel
 
 
-class UserBase(SQLModel):
+def to_camel(string: str) -> str:
+    return humps.camelize(string)
+
+
+class CamelModel(SQLModel):
+    class Config:
+        alias_generator = to_camel
+        populate_by_name = True
+
+
+class UserBase(CamelModel):
     email: str = Field(unique=True, index=True)
     full_name: str | None = None
 
@@ -11,13 +22,13 @@ class UserCreate(UserBase):
     password: str
 
 
-class UserRegister(SQLModel):
+class UserRegister(CamelModel):
     email: str
     password: str
     full_name: str | None = None
 
 
-class UserLogin(SQLModel):
+class UserLogin(CamelModel):
     email: str
     password: str
 
