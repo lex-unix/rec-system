@@ -3,9 +3,13 @@
   import { user } from '$lib/stores';
   import { onMount } from 'svelte';
 
+  let show = false;
   onMount(() => {
     !$user && goto('/login');
+    show = true;
   });
 </script>
 
-<slot />
+{#if show}
+  <slot />
+{/if}

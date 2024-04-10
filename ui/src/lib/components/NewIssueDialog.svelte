@@ -40,9 +40,9 @@
 
   function add() {
     dispatch('add', {
-      issueSubject,
-      issueType,
-      issueDescription
+      subject: issueSubject,
+      type: issueType,
+      description: issueDescription
     });
     dialog.dismiss();
   }

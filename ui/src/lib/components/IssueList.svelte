@@ -1,9 +1,8 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { issues as initIssues } from '$lib';
   import { createEventDispatcher } from 'svelte';
-
-  type Issue = (typeof $initIssues)[number];
+  import type { Issue } from '$lib/types';
+  import { issueTypes } from '$lib/data/issue-types';
 
   export let issues: Issue[];
 
@@ -26,7 +25,7 @@
           : false}
       >
         <p class="capitalize">
-          {type}
+          {issueTypes[type]}
         </p>
         <p class="line-clamp-1 text-navy-400">{description}</p>
       </a>

@@ -1,19 +1,36 @@
 <script lang="ts">
-  import { issues as initIssues } from '$lib';
   import { SearchBar, IssueList, NewIssueDialog } from '$components';
   import { addToast } from '$components/Toaster.svelte';
+  import { onMount } from 'svelte';
+  import type { Issue } from '$lib/types';
 
-  $: issues = $initIssues;
+  let issues: Issue[] = [];
 
-  function filter(e: CustomEvent<{ search: string }>) {
-    issues = $initIssues.filter(
-      c =>
-        c.type.toLowerCase().includes(e.detail.search.toLowerCase()) ||
-        c.description.toLowerCase().includes(e.detail.search.toLowerCase())
-    );
-  }
+  onMount(async () => {
+    const response = await fetch('http://localhost:8000/issues/', {
+      credentials: 'include'
+    });
 
-  function addIssue() {
+    if (!response.ok) return;
+
+    issues = await response.json();
+  });
+
+  async function addIssue(
+    e: CustomEvent<{ subject: string; title: string; type: string }>
+  ) {
+    const response = await fetch('http://localhost:8000/issues/', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        ...e.detail
+      })
+    });
+    const json = await response.json();
+    console.log(json);
     addToast({
       data: {
         title: 'Issue formed',
@@ -30,7 +47,7 @@
     <div
       class="flex h-20 w-full shrink-0 items-center border-b border-navy-200/10 md:px-3 lg:px-5"
     >
-      <SearchBar on:search={filter} />
+      <SearchBar />
     </div>
     <div class="issues-list w-full flex-1 overflow-y-auto md:px-3 lg:px-5">
       <IssueList {issues} />
