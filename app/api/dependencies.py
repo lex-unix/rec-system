@@ -9,6 +9,7 @@ from sqlmodel import Session
 
 from app.db import users
 from app.db.main import engine
+from app.db.models import User
 from app.internal.redis import pool
 from app.internal.session import RedisStore
 
@@ -55,7 +56,7 @@ async def authorize_user(
     if not user:
         raise HTTPException(status_code=404, detail='user not found')
 
-    return user_id
+    return user
 
 
-AuthorizeDep = Annotated[int, Depends(authorize_user)]
+AuthorizeDep = Annotated[User, Depends(authorize_user)]
