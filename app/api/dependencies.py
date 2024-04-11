@@ -1,7 +1,6 @@
 from collections.abc import Generator
 from typing import Annotated
 
-from fastapi import Cookie
 from fastapi import Depends
 from fastapi import HTTPException
 from redis import Redis
@@ -11,7 +10,7 @@ from app.db import users
 from app.db.main import engine
 from app.db.models import User
 from app.internal.redis import pool
-from app.internal.session import RedisStore
+from app.internal.session import Session as UserSession
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -23,29 +22,16 @@ def get_redis() -> Redis:
     return Redis(connection_pool=pool)
 
 
-def get_session() -> RedisStore:
-    return RedisStore(
-        client=Redis(connection_pool=pool),
-        prefix='session:',
-    )
-
-
 DatabaseDep = Annotated[Session, Depends(get_db)]
 RedisDep = Annotated[Session, Depends(get_redis)]
-UserSessionDep = Annotated[RedisStore, Depends(get_session)]
+UserSessionDep = Annotated[UserSession, Depends(UserSession)]
 
 
 async def authorize_user(
     db: DatabaseDep,
     user_session: UserSessionDep,
-    session_id: Annotated[str | None, Cookie()] = None,
 ):
-    if session_id is None:
-        raise HTTPException(
-            status_code=401, detail='You must be authorized to access resource'
-        )
-
-    user_id = user_session.get_session(session_id)
+    user_id = user_session.get()
 
     if user_id is None:
         raise HTTPException(
