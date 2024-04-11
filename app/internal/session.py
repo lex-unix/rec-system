@@ -12,9 +12,9 @@ from app.internal.redis import pool
 """
 TODO:
 
-1. need to implement Session to conveniently set and store session (set cookie and add to redis)
-2. add ttl option to RedisStore
-""" ''
+-[x] need to implement Session to conveniently set and store session (set cookie and add to redis)
+-[ ] add ttl option to RedisStore
+"""
 
 SESSION_MAX_AGE = 30 * 24 * 60 * 60  # 30 days
 
