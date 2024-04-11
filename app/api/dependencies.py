@@ -31,9 +31,16 @@ async def authorize_user(
     db: DatabaseDep,
     user_session: UserSessionDep,
 ):
-    user_id = user_session.get()
+    session = user_session.get()
 
-    if user_id is None:
+    if session is None:
+        raise HTTPException(
+            status_code=401, detail='You must be authorized to access resource'
+        )
+
+    try:
+        user_id = int(session)
+    except ValueError:
         raise HTTPException(
             status_code=401, detail='You must be authorized to access resource'
         )
