@@ -1,5 +1,3 @@
-from typing import Any
-
 from fastapi import APIRouter
 from fastapi import HTTPException
 from fastapi import Response
@@ -21,12 +19,12 @@ async def register(
     user_in: UserCreate,
     db: DatabaseDep,
     user_session: UserSessionDep,
-) -> Any:
+):
     user = users.get_user_by_email(session=db, email=user_in.email)
     if user:
         raise HTTPException(status_code=400, detail='user with this email already exists')
     user = users.create_user(session=db, user_create=user_in)
-    user_session.create(user.id)
+    user_session.create(user.id)  # type: ignore
     return user
 
 
@@ -38,7 +36,7 @@ async def login(user_in: UserLogin, db: DatabaseDep, user_session: UserSessionDe
     if not compare_hash(user_in.password, user.password_hash):
         raise HTTPException(status_code=401, detail='invalid authentication credentials')
 
-    user_session.create(user.id)
+    user_session.create(user.id)  # type: ignore
     return user
 
 
