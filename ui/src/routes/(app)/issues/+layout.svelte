@@ -3,6 +3,7 @@
   import { addToast } from '$components/Toaster.svelte';
   import { onMount } from 'svelte';
   import type { Issue } from '$lib/types';
+  import { createChat, createIssue } from '$lib/api-utils';
 
   let issues: Issue[] = [];
 
@@ -19,18 +20,16 @@
   async function addIssue(
     e: CustomEvent<{ subject: string; title: string; type: string }>
   ) {
-    const response = await fetch('http://localhost:8000/issues/', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        ...e.detail
-      })
-    });
-    const json = await response.json();
-    console.log(json);
+    let body = JSON.stringify({ ...e.detail });
+    const issueResponse = await createIssue(body);
+    if (!issueResponse.ok) return;
+    // console.log(issueResponse.data);
+
+    body = JSON.stringify({ issueId: issueResponse.data.id });
+    const chatResponse = await createChat(body);
+    if (!chatResponse.ok) return;
+    // console.log(chatResponse.data);
+
     addToast({
       data: {
         title: 'Issue formed',

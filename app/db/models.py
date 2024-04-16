@@ -1,6 +1,6 @@
 from datetime import datetime
+from typing import Optional
 
-# from typing import Optional
 import humps
 
 # from sqlalchemy import func
@@ -71,11 +71,13 @@ class Issue(IssueBase, table=True):
     __tablename__ = 'issues'
     id: int | None = Field(default=None, primary_key=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
-    # updated_at: Optional[datetime] = Field(
-    #     sa_column=Column(DateTime(), onupdate=func.now())
-    # )
     user_id: int | None = Field(default=None, foreign_key='users.id', nullable=False)
+
     user: User | None = Relationship(back_populates='issues')
+
+    chat: Optional['Chat'] = Relationship(
+        back_populates='issue', sa_relationship_kwargs={'uselist': False}
+    )
 
 
 class IssuePublic(IssueBase):
@@ -86,4 +88,59 @@ class IssuePublic(IssueBase):
 
 class IssuesPublic(CamelModel):
     issues: list[IssuePublic]
-    count: int
+    # count: int
+
+
+class ChatBase(CamelModel):
+    pass
+
+
+class ChatCreate(ChatBase):
+    issue_id: int
+
+
+class Chat(ChatBase, table=True):
+    __tablename__ = 'chats'
+    id: int | None = Field(default=None, primary_key=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    issue_id: int | None = Field(
+        default=None, foreign_key='issues.id', nullable=False, unique=True
+    )
+
+    issue: Issue | None = Relationship(back_populates='chat')
+
+    messages: list['ChatMessage'] = Relationship(back_populates='chat')
+
+
+class ChatPublic(ChatBase):
+    id: int
+    created_at: datetime
+    issue_id: int
+    messages: list['ChatMessage']
+
+
+class ChatMessageBase(CamelModel):
+    text: str
+
+
+class ChatMessageCreate(ChatMessageBase):
+    pass
+
+
+class ChatMessage(ChatMessageBase, table=True):
+    __tablename__ = 'chat_messages'
+    id: int | None = Field(default=None, primary_key=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    chat_id: int | None = Field(default=None, foreign_key='chats.id', nullable=False)
+    sender_id: int | None = Field(default=None, foreign_key='users.id', nullable=False)
+
+    chat: Chat = Relationship(back_populates='messages')
+
+    sender: User = Relationship()
+
+
+class ChatMessagePublic(ChatMessageBase):
+    id: int
+    created_at: datetime
+    chat_id: int
+    sender_id: int

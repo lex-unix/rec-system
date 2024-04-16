@@ -2,8 +2,10 @@ from sqlmodel import Session
 from sqlmodel import col
 from sqlmodel import select
 
+from app.db.models import Chat
 from app.db.models import Issue
 from app.db.models import IssueCreate
+from app.db.models import IssuePublic
 
 
 def create_issue(session: Session, issue_in: IssueCreate, user_id: int):
@@ -14,11 +16,19 @@ def create_issue(session: Session, issue_in: IssueCreate, user_id: int):
     return db_issue
 
 
+def get_issue_by_id(session: Session, issue_id: int, user_id: int):
+    statement = select(Issue).where(Issue.id == issue_id, Issue.user_id == user_id)
+    issue = session.exec(statement).first()
+    return issue
+
+
 def list_issues(session: Session, user_id: int):
     statement = (
         select(Issue)
         .where(Issue.user_id == user_id)
         .order_by(col(Issue.created_at).desc())
     )
+
     issues = session.exec(statement).all()
+
     return issues

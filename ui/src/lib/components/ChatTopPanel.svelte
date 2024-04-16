@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { Info } from '$components/IssueInfo.svelte';
   import {
     InfoIcon,
     CheckCircle2Icon,
@@ -22,12 +21,11 @@
   import { goto } from '$app/navigation';
   import { createEventDispatcher } from 'svelte';
   import { addToast } from './Toaster.svelte';
+  import type { Issue } from '$lib/types';
+
+  export let issue: Issue;
 
   const dispatch = createEventDispatcher();
-
-  $: issue = $issues.find(
-    ({ id }) => id === parseInt($page.params.id)
-  ) as unknown as Info;
 
   function deleteIssue() {
     goto('/issues');

@@ -15,3 +15,22 @@ export type Issue = {
   type: IssueType;
   userId: number;
 };
+export type SocketData = {
+  message: string;
+  userId: number;
+};
+
+export type Chat = {
+  id: number;
+  issueId: number;
+  createdAt: string;
+  messages: Message[];
+};
+
+export type Message = {
+  id: number;
+  chatId: number;
+  senderId: number;
+  createdAt: string;
+  text: string;
+};

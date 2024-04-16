@@ -14,18 +14,77 @@
     ChatInput,
     ChatTopPanel
   } from '$components';
-  import { messages as initMessage } from '$lib/data/messages';
   import { addToast } from '$components/Toaster.svelte';
+  import { onDestroy } from 'svelte';
+  import { user } from '$lib/stores';
+  import { page } from '$app/stores';
+  import type { SocketData, Issue } from '$lib/types';
+  import { createSocket } from '$lib/ws';
+  import { fetchChat, fetchIssue } from '$lib/api-utils';
 
+  let issue: Issue | undefined = undefined;
   let rating: number;
   let review: string = '';
   let dialog: Dialog;
-  let messages = initMessage;
+  let messages: SocketData[] = [];
+  let socket: WebSocket;
+
+  onDestroy(() => {
+    if (socket) {
+      socket.close();
+    }
+  });
+
+  $: issueId = $page.params.id;
+
+  $: {
+    loadMessages(issueId);
+    loadChat(issueId);
+    setupSocket(issueId);
+  }
+
+  async function loadChat(issueId: string) {
+    const response = await fetchIssue(issueId);
+    if (!response.ok) return;
+    issue = response.data;
+  }
+
+  async function loadMessages(issueId: string) {
+    const response = await fetchChat(issueId);
+    if (!response.ok) return;
+    messages =
+      response.data.messages.map(m => ({
+        message: m.text,
+        userId: m.senderId
+      })) || [];
+    console.log(messages);
+  }
+
+  function setupSocket(issueId: string) {
+    if (socket) {
+      socket.close();
+    }
+
+    socket = createSocket(`chats/ws/${issueId}`);
+    socket.onmessage = event => {
+      const data: SocketData = JSON.parse(event.data);
+      messages = [...messages, data];
+    };
+    socket.onopen = () => console.log('WebSocket connected');
+    socket.onclose = () => console.log('WebSocket disconnected');
+  }
 
   function send(e: CustomEvent<{ message: string }>) {
-    const newMsg = { me: true, date: new Date(), text: e.detail.message };
-    messages.push(newMsg);
-    messages = messages;
+    if (socket.readyState === WebSocket.OPEN) {
+      socket.send(e.detail.message);
+      const message: SocketData = {
+        message: e.detail.message,
+        userId: $user?.id as number
+      };
+      messages = [...messages, message];
+    } else {
+      console.log('skill issue');
+    }
   }
 
   function resolve() {
@@ -44,14 +103,18 @@
 </script>
 
 <div class="w-full">
-  <ChatTopPanel on:resolve={() => dialog.show()} />
+  {#if issue}
+    <ChatTopPanel {issue} on:resolve={() => dialog.show()} />
+  {/if}
 
   <div class="relative h-[calc(100%-80px)] w-full overflow-y-auto">
     <div
       class="flex max-h-[calc(100%-120px)] flex-col gap-4 overflow-y-auto p-4"
     >
-      {#each messages as { me, date, text }}
-        <ChatMessage {me} {date}>{text}</ChatMessage>
+      {#each messages as msg}
+        <ChatMessage me={msg.userId === $user?.id} date={new Date()}>
+          {msg.message}
+        </ChatMessage>
       {/each}
     </div>
     <ChatInput on:send={send} />
