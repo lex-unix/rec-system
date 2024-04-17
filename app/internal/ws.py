@@ -3,22 +3,24 @@ from fastapi import WebSocket
 
 class WSManager:
     def __init__(self) -> None:
-        self.active_connections: list[WebSocket] = []
+        self.rooms: dict[int, list[WebSocket]] = {}
 
-    async def connect(self, client: WebSocket):
+    async def connect(self, client: WebSocket, room: int):
         await client.accept()
-        self.active_connections.append(client)
+        if room not in self.rooms:
+            self.rooms[room] = []
+        self.rooms[room].append(client)
 
-    def disconnect(self, client: WebSocket):
-        self.active_connections.remove(client)
+    def disconnect(self, client: WebSocket, room: int):
+        self.rooms[room].remove(client)
 
-    async def broadcast(self, message: dict, sender: WebSocket):
-        for client in self.active_connections:
+    async def broadcast(self, message: dict, sender: WebSocket, room: int):
+        if room not in self.rooms:
+            return
+
+        for client in self.rooms[room]:
             if client != sender:
                 await client.send_json(message)
-
-    async def send_personal_message(self, message: str, client: WebSocket):
-        await client.send_text(message)
 
 
 manager = WSManager()

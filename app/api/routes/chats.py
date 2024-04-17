@@ -39,17 +39,16 @@ async def chat(
     current_user: AuthorizeDep,
     issue_id: int,
 ):
-    await ws.manager.connect(client)
-
     chat = chat_model.get_chat_by_issue_id(session=db, issue_id=issue_id)
     if chat is None:
         raise HTTPException(status_code=404, detail='chat not found')
 
+    await ws.manager.connect(client, room=chat.id)
     try:
         while True:
             data = await client.receive_text()
             message = {'message': data, 'userId': current_user.id}
-            await ws.manager.broadcast(message, sender=client)
+            await ws.manager.broadcast(message, sender=client, room=chat.id)
             message_in = ChatMessageCreate(text=data)
             chat_model.create_message(
                 session=db,
@@ -59,4 +58,4 @@ async def chat(
             )
 
     except WebSocketDisconnect:
-        ws.manager.disconnect(client)
+        ws.manager.disconnect(client, room=chat.id)
