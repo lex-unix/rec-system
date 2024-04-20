@@ -10,11 +10,11 @@ async def create_issue(
     customer_id: int,
 ):
     sql = """
-        INSERT INTO issues (subject, description, status, customer_id, operator_id)
-        VALUES ($1, $2, 'in_progress', $3, 1)
+        INSERT INTO issues (subject, description, status, type, customer_id, operator_id)
+        VALUES ($1, $2, 'in_progress', $3, $4, 3)
         RETURNING id, created_at, updated_at
     """
-    values = (issue_in.subject, issue_in.description, customer_id)
+    values = (issue_in.subject, issue_in.description, issue_in.type, customer_id)
     row = await conn.fetchrow(sql, *values)
     issue = Issue(
         **dict(row.items()),  # type: ignore
