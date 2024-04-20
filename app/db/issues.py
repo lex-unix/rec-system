@@ -34,9 +34,9 @@ async def get_customer_issue_by_id(
     customer_id: int,
 ):
     sql = """
-        SELECT i.id, i.created_at, i.updated_at, i.subject, i.description, i.status, i.customer_id
+        SELECT i.id, i.created_at, i.updated_at, i.subject, i.description, i.status, i.type, i.customer_id, i.operator_id
         FROM issues i
-        WHERE i.id = $1 AND i.customer_id = $1
+        WHERE i.id = $1 AND i.customer_id = $2
     """
     values = (issue_id, customer_id)
     row = await conn.fetchrow(sql, *values)

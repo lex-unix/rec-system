@@ -64,12 +64,16 @@ async def create_message(
     chat_id: int,
 ):
     sql = """
-        INSERT INTO chat_messsages (chat_id, sender_id, content)
+        INSERT INTO chat_messages (chat_id, sender_id, content)
         VALUES ($1, $2, $3)
         RETURNING id, created_at
     """
 
     values = (chat_id, sender_id, chat_msg_in.content)
     row = await conn.fetchrow(sql, *values)
-    chat_msg = ChatMessage(**dict(row.items()))  # type: ignore
+    chat_msg = ChatMessage(
+        **dict(row.items()),  # type: ignore
+        sender_id=sender_id,
+        content=chat_msg_in.content,
+    )
     return chat_msg

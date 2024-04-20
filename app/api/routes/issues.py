@@ -28,7 +28,7 @@ async def create_issue(db: DBConnDep, current_user: AuthorizeDep, issue_in: Issu
 
 @router.get('/customer/{issue_id}')
 async def get_issue(issue_id: int, db: DBConnDep, current_user: AuthorizeDep):
-    issue = crud.get_customer_issue_by_id(
+    issue = await crud.get_customer_issue_by_id(
         conn=db,
         issue_id=issue_id,
         customer_id=current_user.id,

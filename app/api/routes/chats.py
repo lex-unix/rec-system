@@ -50,7 +50,7 @@ async def chat(
             await ws.manager.broadcast(message, sender=client, room=chat.id)
             message_in = ChatMessageCreate(content=data)
             await crud.create_message(
-                session=db,
+                conn=db,
                 chat_msg_in=message_in,
                 sender_id=current_user.id,  # type: ignore
                 chat_id=chat.id,
