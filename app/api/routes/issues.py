@@ -1,3 +1,5 @@
+from dataclasses import asdict
+
 from fastapi import APIRouter
 from fastapi import HTTPException
 
@@ -28,11 +30,12 @@ async def create_issue(db: DBConnDep, current_user: AuthorizeDep, issue_in: Issu
 
 @router.get('/customer/{issue_id}')
 async def get_issue(issue_id: int, db: DBConnDep, current_user: AuthorizeDep):
-    issue = await crud.get_customer_issue_by_id(
+    issue = await crud.get_issue_with_operator(
         conn=db,
         issue_id=issue_id,
         customer_id=current_user.id,
     )
     if not issue:
         raise HTTPException(status_code=404, detail='Issue not found')
-    return issue
+    print(issue.operator)
+    return asdict(issue)

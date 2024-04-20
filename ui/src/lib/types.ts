@@ -15,6 +15,7 @@ export type Issue = {
   status: string;
   type: IssueType;
   user_id: number;
+  operator: Operator;
 };
 
 export type SocketData = {
@@ -36,4 +37,12 @@ export type Message = {
   sender_id: number;
   created_at: string;
   content: string;
+};
+
+export type Operator = {
+  id: number;
+  full_name: string;
+  rating: number;
+  availability: boolean;
+  resolved_issues: number;
 };

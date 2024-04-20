@@ -1,5 +1,6 @@
-from dataclasses import dataclass
 from datetime import datetime
+
+from pydantic.dataclasses import dataclass
 
 
 @dataclass
@@ -38,3 +39,12 @@ class UserPublic:
     updated_at: datetime
     email: str
     full_name: str
+
+
+@dataclass
+class Operator:
+    id: int
+    rating: float
+    availability: bool
+    full_name: str
+    resolved_issues: int = 0

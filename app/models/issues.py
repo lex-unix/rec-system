@@ -1,5 +1,8 @@
-from dataclasses import dataclass
 from datetime import datetime
+
+from pydantic.dataclasses import dataclass
+
+from app.models.users import Operator
 
 
 @dataclass
@@ -27,6 +30,7 @@ class Issue:
     status: str
     customer_id: int
     operator_id: int
+    operator: Operator | None = None
 
 
 @dataclass
@@ -37,6 +41,7 @@ class IssuePublic:
     status: str
     customer_id: int
     operator_id: int
+    operator: Operator | None = None
 
 
 @dataclass

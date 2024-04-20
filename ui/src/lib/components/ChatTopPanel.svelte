@@ -62,7 +62,7 @@
           <InfoIcon slot="icon" class="square-5" />
         </PopoverTrigger>
         <PopoverContent>
-          <IssueInfo info={issue} />
+          <IssueInfo {issue} />
         </PopoverContent>
       </Popover>
       <Dropdown>

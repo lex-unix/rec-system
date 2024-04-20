@@ -1,22 +1,11 @@
-<script context="module" lang="ts">
-  export type Info = {
-    status: string;
-    type: string;
-    subject: string;
-    description: string;
-    operatorName: string;
-    averageRating: number;
-    totalResolvedIssues: number;
-  };
-</script>
-
 <script lang="ts">
   import { createTabs, melt } from '@melt-ui/svelte';
   import { crossfade } from 'svelte/transition';
   import { cubicInOut } from 'svelte/easing';
   import ResizablePannel from './ResizablePanel.svelte';
+  import type { Issue } from '$lib/types';
 
-  export let info: Info;
+  export let issue: Issue;
 
   const {
     elements: { root, list, content, trigger },
@@ -69,20 +58,20 @@
       <div class="divide-y divide-navy-200/10">
         <div class="space-y-1 py-4">
           <p class="text-navy-400">Issue status:</p>
-          <p class="capitalize text-navy-100">{info.status}</p>
+          <p class="capitalize text-navy-100">{issue.status}</p>
         </div>
         <div class="space-y-1 py-4">
           <p class="text-navy-400">Issue type:</p>
-          <p class="capitalize text-navy-100">{info.type}</p>
+          <p class="capitalize text-navy-100">{issue.type}</p>
         </div>
         <div class="space-y-1 py-4">
           <p class="text-navy-400">Issue subject:</p>
-          <p class="text-navy-100">{info.subject}</p>
+          <p class="text-navy-100">{issue.subject}</p>
         </div>
         <div class="space-y-1 py-4">
           <p class="text-navy-400">Issue description:</p>
           <p class="text-navy-100">
-            {info.description}
+            {issue.description}
           </p>
         </div>
       </div>
@@ -94,15 +83,15 @@
       <div class="divide-y divide-navy-200/10">
         <div class="space-y-1 py-4">
           <p class="text-navy-400">Full name:</p>
-          <p class="text-navy-100">{info.operatorName}</p>
+          <p class="text-navy-100">{issue.operator.full_name}</p>
         </div>
         <div class="space-y-1 py-4">
           <p class="text-navy-400">Average rating:</p>
-          <p class="text-navy-100">{info.averageRating}</p>
+          <p class="text-navy-100">{issue.operator.rating}</p>
         </div>
         <div class="space-y-1 py-4">
           <p class="text-navy-400">Resolved issues:</p>
-          <p class="text-navy-100">{info.totalResolvedIssues}</p>
+          <p class="text-navy-100">{issue.operator.resolved_issues}</p>
         </div>
       </div>
     </div>
