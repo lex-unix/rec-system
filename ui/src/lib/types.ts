@@ -2,7 +2,7 @@ import type { issueTypes } from './data/issue-types';
 
 export type User = {
   id: number;
-  fullName: string;
+  full_name: string;
   email: string;
 };
 
@@ -12,25 +12,28 @@ export type Issue = {
   id: number;
   subject: string;
   description: string;
+  status: string;
   type: IssueType;
-  userId: number;
+  user_id: number;
 };
+
 export type SocketData = {
   message: string;
-  userId: number;
+  user_id: number;
+  created_at: Date;
 };
 
 export type Chat = {
   id: number;
   issueId: number;
-  createdAt: string;
+  created_at: string;
   messages: Message[];
 };
 
 export type Message = {
   id: number;
-  chatId: number;
-  senderId: number;
-  createdAt: string;
-  text: string;
+  chat_id: number;
+  sender_id: number;
+  created_at: string;
+  content: string;
 };

@@ -18,16 +18,17 @@
   import { onDestroy } from 'svelte';
   import { user } from '$lib/stores';
   import { page } from '$app/stores';
-  import type { SocketData, Issue } from '$lib/types';
+  import type { SocketData, Issue, Chat } from '$lib/types';
   import { createSocket } from '$lib/ws';
-  import { fetchChat, fetchIssue } from '$lib/api-utils';
+  import { fetchChat, fetchCustomerIssue } from '$lib/api-utils';
 
-  let issue: Issue | undefined = undefined;
   let rating: number;
   let review: string = '';
   let dialog: Dialog;
   let messages: SocketData[] = [];
   let socket: WebSocket;
+  let chat: Chat;
+  let issue: Issue;
 
   onDestroy(() => {
     if (socket) {
@@ -38,26 +39,26 @@
   $: issueId = $page.params.id;
 
   $: {
-    loadMessages(issueId);
     loadChat(issueId);
+    loadIssue(issueId);
     setupSocket(issueId);
   }
 
-  async function loadChat(issueId: string) {
-    const response = await fetchIssue(issueId);
+  async function loadIssue(issueId: string) {
+    const response = await fetchCustomerIssue(issueId);
     if (!response.ok) return;
     issue = response.data;
   }
 
-  async function loadMessages(issueId: string) {
+  async function loadChat(issueId: string) {
     const response = await fetchChat(issueId);
     if (!response.ok) return;
-    messages =
-      response.data.messages.map(m => ({
-        message: m.text,
-        userId: m.senderId
-      })) || [];
-    console.log(messages);
+    chat = response.data;
+    messages = chat.messages.map(m => ({
+      message: m.content,
+      user_id: m.sender_id,
+      created_at: new Date(m.created_at)
+    }));
   }
 
   function setupSocket(issueId: string) {
@@ -79,7 +80,8 @@
       socket.send(e.detail.message);
       const message: SocketData = {
         message: e.detail.message,
-        userId: $user?.id as number
+        user_id: $user?.id as number,
+        created_at: new Date()
       };
       messages = [...messages, message];
     } else {
@@ -111,11 +113,13 @@
     <div
       class="flex max-h-[calc(100%-120px)] flex-col gap-4 overflow-y-auto p-4"
     >
-      {#each messages as msg}
-        <ChatMessage me={msg.userId === $user?.id} date={new Date()}>
-          {msg.message}
-        </ChatMessage>
-      {/each}
+      {#if chat}
+        {#each messages as msg}
+          <ChatMessage me={msg.user_id === $user?.id} date={msg.created_at}>
+            {msg.message}
+          </ChatMessage>
+        {/each}
+      {/if}
     </div>
     <ChatInput on:send={send} />
   </div>

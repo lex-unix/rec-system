@@ -73,12 +73,12 @@ export function createChat(body: string) {
   return sendPostRequest<Chat>(CHAT_ENDPOINT + '/', body);
 }
 
-export function fetchIssues() {
-  return sendGetRequest<Issue[]>(ISSUES_ENDPOINT + '/');
+export function fetchCustomerIssues() {
+  return sendGetRequest<Issue[]>(ISSUES_ENDPOINT + '/customer');
 }
 
-export function fetchIssue(id: string) {
-  return sendGetRequest<Issue>(`${ISSUES_ENDPOINT}/${id}`);
+export function fetchCustomerIssue(id: string) {
+  return sendGetRequest<Issue>(`${ISSUES_ENDPOINT}/customer/${id}`);
 }
 
 export function fetchChats() {

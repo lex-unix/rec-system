@@ -9,7 +9,7 @@
   let password = '';
 
   async function submit() {
-    const body = JSON.stringify({ fullName, email, password });
+    const body = JSON.stringify({ full_name: fullName, email, password });
     const response = await register(body);
     if (!response.ok) {
       return;

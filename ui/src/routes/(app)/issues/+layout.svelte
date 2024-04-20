@@ -3,18 +3,14 @@
   import { addToast } from '$components/Toaster.svelte';
   import { onMount } from 'svelte';
   import type { Issue } from '$lib/types';
-  import { createChat, createIssue } from '$lib/api-utils';
+  import { createChat, createIssue, fetchCustomerIssues } from '$lib/api-utils';
 
   let issues: Issue[] = [];
 
   onMount(async () => {
-    const response = await fetch('http://localhost:8000/issues/', {
-      credentials: 'include'
-    });
-
-    if (!response.ok) return;
-
-    issues = await response.json();
+    const respone = await fetchCustomerIssues();
+    if (!respone.ok) return;
+    issues = respone.data;
   });
 
   async function addIssue(
@@ -23,12 +19,10 @@
     let body = JSON.stringify({ ...e.detail });
     const issueResponse = await createIssue(body);
     if (!issueResponse.ok) return;
-    // console.log(issueResponse.data);
 
-    body = JSON.stringify({ issueId: issueResponse.data.id });
+    body = JSON.stringify({ issue_id: issueResponse.data.id });
     const chatResponse = await createChat(body);
     if (!chatResponse.ok) return;
-    // console.log(chatResponse.data);
 
     addToast({
       data: {
