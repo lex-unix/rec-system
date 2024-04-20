@@ -15,6 +15,7 @@ TODO:
 
 -[x] need to implement Session to conveniently set and store session (set cookie and add to redis)
 -[ ] add ttl option to RedisStore
+-[ ] hash session id in cookie
 """
 
 SESSION_MAX_AGE = 30 * 24 * 60 * 60  # 30 days
