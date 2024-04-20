@@ -2,6 +2,7 @@ import uuid
 from abc import ABC
 from abc import abstractmethod
 from typing import Annotated
+from typing import Literal
 
 from fastapi import Cookie
 from fastapi import Response
@@ -64,7 +65,7 @@ class Session:
     store = store
     cookie_name = 'session_id'
     cookie_max_age = SESSION_MAX_AGE
-    cookie_same_site = 'lax'
+    cookie_same_site: Literal['lax', 'strict', 'none'] | None = 'lax'
     cookie_secure = False
     cookie_http_only = True
 
