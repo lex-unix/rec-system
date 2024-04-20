@@ -1,34 +1,42 @@
-from collections.abc import Generator
 from typing import Annotated
 
+import asyncpg
 from fastapi import Depends
 from fastapi import HTTPException
 from redis import Redis
-from sqlmodel import Session
 
-from app.db import users
-from app.db.main import engine
-from app.db.models import User
+from app.db.pool import create_db_pool
+from app.db.users import get_user_by_id
 from app.internal.redis import pool
 from app.internal.session import Session as UserSession
+from app.models.users import User
+
+db_pool = None
 
 
-def get_db() -> Generator[Session, None, None]:
-    with Session(engine) as session:
-        yield session
+async def get_db_pool():
+    global db_pool
+    if db_pool is None:
+        db_pool = await create_db_pool()
+    return db_pool
+
+
+async def get_db_connection(pool: asyncpg.pool.Pool = Depends(get_db_pool)):
+    async with pool.acquire() as connection:
+        yield connection
 
 
 def get_redis() -> Redis:
     return Redis(connection_pool=pool)
 
 
-DatabaseDep = Annotated[Session, Depends(get_db)]
-RedisDep = Annotated[Session, Depends(get_redis)]
+RedisDep = Annotated[Redis, Depends(get_redis)]
 UserSessionDep = Annotated[UserSession, Depends(UserSession)]
+DBConnDep = Annotated[asyncpg.pool.PoolConnectionProxy, Depends(get_db_connection)]
 
 
 async def authorize_user(
-    db: DatabaseDep,
+    db: DBConnDep,
     user_session: UserSessionDep,
 ):
     session = user_session.get()
@@ -45,7 +53,7 @@ async def authorize_user(
             status_code=401, detail='You must be authorized to access resource'
         )
 
-    user = users.get_user_by_id(session=db, user_id=user_id)
+    user = await get_user_by_id(conn=db, user_id=user_id)
     if not user:
         raise HTTPException(status_code=404, detail='user not found')
 

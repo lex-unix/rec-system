@@ -20,10 +20,8 @@ async def create_issue(
         **dict(row.items()),  # type: ignore
         subject=issue_in.subject,
         description=issue_in.description,
-        type=issue_in.type,
         customer_id=customer_id,
         operator_id=1,
-        status='in_progress',
     )
     return issue
 
@@ -48,10 +46,10 @@ async def get_customer_issue_by_id(
 # TODO: pagination
 async def get_customer_issues(conn: asyncpg.pool.PoolConnectionProxy, customer_id: int):
     sql = """
-        SELECT i.id, i.created_at, i.updated_at, i.subject, i.description, i.type, i.status, i.customer_id
-        FROM issues i
+        SELECT i.id, i.created_at, i.updated_at, i.subject, i.description, i.status, i.customer_id
+        FROM issues
         WHERE i.customer_id = $1
     """
     rows = await conn.fetch(sql, customer_id)
-    issues = [Issue(**dict(row.items()), operator_id=1) for row in rows]
+    issues = [Issue(**dict(row.items())) for row in rows]
     return issues
