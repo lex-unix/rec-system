@@ -11,6 +11,8 @@
   function select() {
     dispatch('select');
   }
+
+  $: console.log(issues);
 </script>
 
 <ul class="list-none space-y-1 pb-4 pt-4">
@@ -25,7 +27,7 @@
           : false}
       >
         <p class="capitalize">
-          {issueTypes[type]}
+          {type}
         </p>
         <p class="line-clamp-1 text-navy-400">{description}</p>
       </a>
