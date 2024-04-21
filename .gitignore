@@ -1,5 +1,9 @@
 *.png
 
+/models/*
+!/models/.gitkeep
+
+
 # ---- Svelte ----
 .DS_Store
 node_modules
