@@ -1,6 +1,6 @@
 import asyncpg
 
-from app.models.users import User
+from app.models.users import Operator, User
 from app.models.users import UserRegister
 
 
@@ -45,3 +45,25 @@ async def get_user_by_id(conn: asyncpg.pool.PoolConnectionProxy, user_id: int):
         return None
     result = User(**dict(row.items()))
     return result
+
+
+async def get_operator_by_name(conn: asyncpg.pool.PoolConnectionProxy, full_name: str):
+    sql = """
+        SELECT u.id, u.created_at, u.updated_at, u.full_name, o.rating
+        FROM users u
+        JOIN operators o ON o.id = u.id
+        WHERE u.full_name = $1 AND o.availability = TRUE
+    """
+    row = await conn.fetchrow(sql, full_name)
+    if not row:
+        return None
+    operator = Operator(
+        id=row['id'],
+        created_at=row['created_at'],
+        updated_at=row['updated_at'],
+        rating=row['rating'],
+        availability=True,
+        full_name=row['full_name'],
+        resolved_issues=0,
+    )
+    return operator

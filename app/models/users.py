@@ -44,6 +44,8 @@ class UserPublic:
 @dataclass
 class Operator:
     id: int
+    created_at: datetime
+    updated_at: datetime
     rating: float
     availability: bool
     full_name: str

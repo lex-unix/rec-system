@@ -9,13 +9,20 @@ async def create_issue(
     conn: asyncpg.pool.PoolConnectionProxy,
     issue_in: IssueCreate,
     customer_id: int,
+    operator_id: int,
 ):
     sql = """
         INSERT INTO issues (subject, description, status, type, customer_id, operator_id)
-        VALUES ($1, $2, 'in_progress', $3, $4, 3)
+        VALUES ($1, $2, 'in_progress', $3, $4, $5)
         RETURNING id, created_at, updated_at
     """
-    values = (issue_in.subject, issue_in.description, issue_in.type, customer_id)
+    values = (
+        issue_in.subject,
+        issue_in.description,
+        issue_in.type,
+        customer_id,
+        operator_id,
+    )
     row = await conn.fetchrow(sql, *values)
     issue = Issue(
         **dict(row.items()),  # type: ignore
@@ -23,7 +30,7 @@ async def create_issue(
         description=issue_in.description,
         type=issue_in.type,
         customer_id=customer_id,
-        operator_id=1,
+        operator_id=operator_id,
         status='in_progress',
     )
     return issue
@@ -42,7 +49,6 @@ async def get_customer_issue_by_id(
     """
     values = (issue_id, customer_id)
     row = await conn.fetchrow(sql, *values)
-    print(row)
     if not row:
         return None
     return Issue(**dict(row.items()))
@@ -68,7 +74,7 @@ async def get_issue_with_operator(
     sql = """
         SELECT i.id, i.subject, i.description, i.type, i.status, i.created_at, i.updated_at, i.customer_id,
             o.id AS operator_id, u.full_name AS operator_full_name, o.rating AS operator_rating,
-            o.availability as operator_availability,
+            o.availability as operator_availability, u.created_at as operator_created_at, u.updated_at as operator_updated_at,
             (
                 SELECT count(*)
                 FROM issues
@@ -87,6 +93,8 @@ async def get_issue_with_operator(
     if row['operator_id'] is not None:
         operator_data = Operator(
             id=row['operator_id'],
+            created_at=row['operator_created_at'],
+            updated_at=row['operator_updated_at'],
             full_name=row['operator_full_name'],
             rating=row['operator_rating'],
             availability=row['operator_availability'],

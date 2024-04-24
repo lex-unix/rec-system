@@ -94,7 +94,7 @@ def load_ranking_model(unique_customer_names, unique_operator_names):
     return ranking_model
 
 
-def setup_models():
+def load_models() -> dict[str, tfrs.models.Model]:
     df = load_data()
 
     operators, customer_ratings = preprocess_data(df)
@@ -122,26 +122,32 @@ def setup_models():
 
     index = load_indexer(retrieval_model=retrieval_model, operators=operators)
 
-    return retrieval_model, ranking_model, index
+    models = {
+        'retrieval': retrieval_model,
+        'ranking': ranking_model,
+        'index': index,
+    }
+
+    return models
 
 
-def predict(customer_name: str, ticket_subject: str):
-    retrieval_model, ranking_model, index = setup_models()
+def predict(models, customer_name: str, ticket_subject: str):
+    # models = load_models()
 
     customer_test = {
         'customer_name': tf.expand_dims(customer_name, axis=0),
         'ticket_subject': tf.expand_dims(ticket_subject, axis=0),
     }
 
-    _, operator_suggestions = index(customer_test)
+    _, operator_suggestions = models['index'](customer_test)
 
     suggested_titles = operator_suggestions[0].numpy()
 
     test_ratings = {}
     for operator_name in suggested_titles:
-        test_ratings[operator_name] = ranking_model(
+        test_ratings[operator_name] = models['ranking'](
             {
-                'customer_name': np.array(['Heather Love']),
+                'customer_name': np.array([customer_name]),
                 'operator_name': np.array([operator_name]),
             }
         )

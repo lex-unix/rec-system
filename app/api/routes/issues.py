@@ -6,7 +6,10 @@ from fastapi import HTTPException
 import app.db.issues as crud
 from app.api.dependencies import AuthorizeDep
 from app.api.dependencies import DBConnDep
+from app.api.dependencies import MLModelsDep
+from app.db.users import get_operator_by_name
 from app.models.issues import IssueCreate
+from nn.main import predict
 
 router = APIRouter()
 
@@ -19,11 +22,29 @@ async def list_issues(db: DBConnDep, current_user: AuthorizeDep):
 
 # TODO: use ml model to assign operator and create issues with assigned operator
 @router.post('/')
-async def create_issue(db: DBConnDep, current_user: AuthorizeDep, issue_in: IssueCreate):
+async def create_issue(
+    db: DBConnDep,
+    current_user: AuthorizeDep,
+    issue_in: IssueCreate,
+    ml_models: MLModelsDep,
+):
+    suggested_operators = predict(
+        models=ml_models,
+        customer_name=current_user.full_name,
+        ticket_subject=issue_in.subject,
+    )
+    operator = None
+    for suggestion in suggested_operators:
+        operator = await get_operator_by_name(conn=db, full_name=suggestion['operator'])
+        if operator:
+            break
+    if operator is None:
+        raise HTTPException(status_code=204, detail='Could not find any operator')
     issue = await crud.create_issue(
         conn=db,
         issue_in=issue_in,
         customer_id=current_user.id,
+        operator_id=operator.id,
     )
     return issue
 
@@ -37,5 +58,4 @@ async def get_issue(issue_id: int, db: DBConnDep, current_user: AuthorizeDep):
     )
     if not issue:
         raise HTTPException(status_code=404, detail='Issue not found')
-    print(issue.operator)
     return asdict(issue)
