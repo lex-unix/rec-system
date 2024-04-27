@@ -1,4 +1,5 @@
 import type { issueTypes } from './data/issue-types';
+import type { issueStatus } from './issues';
 
 export type User = {
   id: number;
@@ -7,12 +8,13 @@ export type User = {
 };
 
 export type IssueType = keyof typeof issueTypes;
+export type IssueStatus = keyof typeof issueStatus;
 
 export type Issue = {
   id: number;
   subject: string;
   description: string;
-  status: string;
+  status: IssueStatus;
   type: IssueType;
   user_id: number;
   operator: Operator;

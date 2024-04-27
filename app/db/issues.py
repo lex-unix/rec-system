@@ -78,8 +78,15 @@ async def get_issue_with_operator(
             (
                 SELECT count(*)
                 FROM issues
-                WHERE operator_id = o.id AND status = 'resolved'
-            ) as resolved_issues_count
+                WHERE operator_id = o.id AND status = 'closed'
+            ) as resolved_issues_count,
+            (
+                SELECT ROUND(AVG(f.rating)::numeric, 2)
+                FROM issues i2
+                LEFT JOIN feedbacks f ON f.issue_id = i2.id
+                WHERE
+                i2.operator_id = o.id
+            ) AS average_operator_rating
         FROM issues i
         LEFT JOIN operators o ON i.operator_id = o.id
         LEFT JOIN users u ON o.id = u.id
@@ -96,7 +103,7 @@ async def get_issue_with_operator(
             created_at=row['operator_created_at'],
             updated_at=row['operator_updated_at'],
             full_name=row['operator_full_name'],
-            rating=row['operator_rating'],
+            rating=row['average_operator_rating'],
             availability=row['operator_availability'],
             resolved_issues=row['resolved_issues_count'],
         )

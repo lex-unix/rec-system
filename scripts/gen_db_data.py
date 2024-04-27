@@ -80,6 +80,16 @@ async def insert_chat(conn, issue_id):
     )
 
 
+async def insert_feedback(conn, issue_id, rating):
+    await conn.execute(
+        'INSERT INTO feedbacks (rating, issue_id) VALUES ($1, $2);', rating, issue_id
+    )
+
+
+def snake_case(s: str):
+    return '_'.join([w.lower() for w in s.split(' ')])
+
+
 async def main():
     conn = await asyncpg.connect(dsn=os.environ['DATABASE_URL'])
     await conn.execute('BEGIN;')
@@ -92,7 +102,6 @@ async def main():
             customer_id = await insert_user(
                 conn, item['customer_name'], item['customer_email']
             )
-            print(customer_id)
             if customer_id is None:
                 customer_id = await conn.fetchval(
                     'SELECT id FROM users WHERE email = $1;', item['customer_email']
@@ -115,12 +124,13 @@ async def main():
                 conn,
                 item['ticket_subject'],
                 item['ticket_description'],
-                item['ticket_type'],
-                item['ticket_status'],
+                snake_case(item['ticket_type']),
+                snake_case(item['ticket_status']),
                 customer_id,
                 operator_id,
             )
             await insert_chat(conn, issue_id)
+            await insert_feedback(conn, issue_id, item['customer_satisfaction_rating'])
 
         await conn.execute('COMMIT;')
     except Exception as e:

@@ -4,6 +4,7 @@
   import { cubicInOut } from 'svelte/easing';
   import ResizablePannel from './ResizablePanel.svelte';
   import type { Issue } from '$lib/types';
+  import { issueType, issueStatus } from '$lib/issues';
 
   export let issue: Issue;
 
@@ -58,11 +59,11 @@
       <div class="divide-y divide-navy-200/10">
         <div class="space-y-1 py-4">
           <p class="text-navy-400">Issue status:</p>
-          <p class="capitalize text-navy-100">{issue.status}</p>
+          <p class="text-navy-100">{issueStatus[issue.status]}</p>
         </div>
         <div class="space-y-1 py-4">
           <p class="text-navy-400">Issue type:</p>
-          <p class="capitalize text-navy-100">{issue.type}</p>
+          <p class="text-navy-100">{issueType[issue.type]}</p>
         </div>
         <div class="space-y-1 py-4">
           <p class="text-navy-400">Issue subject:</p>

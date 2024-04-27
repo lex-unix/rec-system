@@ -2,7 +2,7 @@
   import { page } from '$app/stores';
   import { createEventDispatcher } from 'svelte';
   import type { Issue } from '$lib/types';
-  import { issueTypes } from '$lib/data/issue-types';
+  import { issueType } from '$lib/issues';
 
   export let issues: Issue[];
 
@@ -11,8 +11,6 @@
   function select() {
     dispatch('select');
   }
-
-  $: console.log(issues);
 </script>
 
 <ul class="list-none space-y-1 pb-4 pt-4">
@@ -27,7 +25,7 @@
           : false}
       >
         <p class="capitalize">
-          {type}
+          {issueType[type]}
         </p>
         <p class="line-clamp-1 text-navy-400">{description}</p>
       </a>

@@ -16,8 +16,8 @@
     DropdownItem,
     MobileIssuesDrawer
   } from '$components';
-  import { page } from '$app/stores';
-  import { issues } from '$lib';
+  // import { page } from '$app/stores';
+  import { issueType } from '$lib/issues';
   import { goto } from '$app/navigation';
   import { createEventDispatcher } from 'svelte';
   import { addToast } from './Toaster.svelte';
@@ -29,7 +29,7 @@
 
   function deleteIssue() {
     goto('/issues');
-    $issues = $issues.filter(c => c.id !== parseInt($page.params.id));
+    // $issues = $issues.filter(c => c.id !== parseInt($page.params.id));
     addToast({
       data: {
         title: 'Issue deleted',
@@ -52,7 +52,7 @@
     </div>
   </div>
   <h1 class="w-full text-center text-lg font-medium capitalize">
-    {issue?.type}
+    {issueType[issue.type]}
   </h1>
 
   <div class="absolute inset-y-0 right-4 pl-5">
