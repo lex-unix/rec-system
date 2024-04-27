@@ -1,9 +1,5 @@
 #!/usr/bin/env fish
 
-if test -e $VIRTUAL_ENV
-  source $(path resolve "./venv/bin/activate.fish")
-end
-
 set -l services db redis
 set -l running_containers (docker compose ps --format "{{.Names}}")
 set -l not_running false
@@ -23,4 +19,4 @@ end
 load_env .env; or exit
 echo ".env file loaded"
 
-uvicorn app.main:app --reload
+poetry run uvicorn app.main:app --reload
