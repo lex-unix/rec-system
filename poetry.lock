@@ -179,6 +179,21 @@ docs = ["Sphinx (>=5.3.0,<5.4.0)", "sphinx-rtd-theme (>=1.2.2)", "sphinxcontrib-
 test = ["flake8 (>=6.1,<7.0)", "uvloop (>=0.15.3)"]
 
 [[package]]
+name = "asyncpg-stubs"
+version = "0.29.1"
+description = "asyncpg stubs"
+optional = false
+python-versions = ">=3.8,<4.0"
+files = [
+    {file = "asyncpg_stubs-0.29.1-py3-none-any.whl", hash = "sha256:cce994d5a19394249e74ae8d252bde3c77cee0ddfc776cc708b724fdb4adebb6"},
+    {file = "asyncpg_stubs-0.29.1.tar.gz", hash = "sha256:686afcc0af3a2f3c8e393cd850e0de430e5a139ce82b2f28ef8f693ecdf918bf"},
+]
+
+[package.dependencies]
+asyncpg = ">=0.29,<0.30"
+typing-extensions = ">=4.7.0,<5.0.0"
+
+[[package]]
 name = "cachetools"
 version = "5.3.3"
 description = "Extensible memoizing collections and decorators"
@@ -3405,4 +3420,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "568af12b9c06c40038d356990958fb2e733bfbfba5ab9c8180a6f50033a66da3"
+content-hash = "ce605c43dd4bf0297dc3135539291ee91426d90ee6d6bea4eea062c713819145"
