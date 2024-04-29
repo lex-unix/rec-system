@@ -20,7 +20,11 @@
   import { page } from '$app/stores';
   import type { SocketData, Issue, Chat } from '$lib/types';
   import { createSocket } from '$lib/ws';
-  import { fetchChat, fetchCustomerIssue } from '$lib/api-utils';
+  import {
+    fetchChat,
+    fetchCustomerIssue,
+    createFeedback
+  } from '$lib/api-utils';
 
   let rating: number;
   let review: string = '';
@@ -89,13 +93,18 @@
     }
   }
 
-  function resolve() {
-    addToast({
-      data: {
-        title: 'Issue resolved',
-        description: 'Issue is now closed. Thank you for your feedback'
-      }
-    });
+  async function resolve() {
+    const body = JSON.stringify({ rating });
+    console.log($page.params.id);
+    const response = await createFeedback($page.params.id, body);
+    if (response.ok) {
+      addToast({
+        data: {
+          title: 'Issue resolved',
+          description: 'Issue is now closed. Thank you for your feedback'
+        }
+      });
+    }
     dialog.dismiss();
   }
 

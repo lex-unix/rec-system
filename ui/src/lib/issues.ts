@@ -7,7 +7,7 @@ export const issueType = {
 };
 
 export const issueStatus = {
-  open: 'open',
-  closed: 'closed',
-  pending_customer_response: 'Pending customer response'
+  open: 'Open',
+  closed: 'Closed',
+  in_progress: 'In progress'
 };

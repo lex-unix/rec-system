@@ -20,7 +20,6 @@ async def list_issues(db: DBConnDep, current_user: AuthorizeDep):
     return issues
 
 
-# TODO: use ml model to assign operator and create issues with assigned operator
 @router.post('/')
 async def create_issue(
     db: DBConnDep,

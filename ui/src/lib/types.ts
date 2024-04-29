@@ -48,3 +48,11 @@ export type Operator = {
   availability: boolean;
   resolved_issues: number;
 };
+
+export type Feeback = {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  rating: number;
+  issue_id: number;
+};

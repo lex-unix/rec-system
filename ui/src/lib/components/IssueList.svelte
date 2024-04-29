@@ -2,7 +2,7 @@
   import { page } from '$app/stores';
   import { createEventDispatcher } from 'svelte';
   import type { Issue } from '$lib/types';
-  import { issueType } from '$lib/issues';
+  import { issueType, issueStatus } from '$lib/issues';
 
   export let issues: Issue[];
 
@@ -14,7 +14,7 @@
 </script>
 
 <ul class="list-none space-y-1 pb-4 pt-4">
-  {#each issues as { id, type, description }}
+  {#each issues as { id, type, description, status }}
     <li>
       <a
         on:click={select}
@@ -24,9 +24,16 @@
           ? parseInt($page.params.id) === id
           : false}
       >
-        <p class="capitalize">
-          {issueType[type]}
-        </p>
+        <div class="flex items-center justify-between">
+          <p class="capitalize">
+            {issueType[type]}
+          </p>
+          <p
+            class="rounded border border-violet-200/10 bg-violet-950 px-2 py-1 text-sm text-violet-200"
+          >
+            {issueStatus[status]}
+          </p>
+        </div>
         <p class="line-clamp-1 text-navy-400">{description}</p>
       </a>
     </li>

@@ -1,10 +1,11 @@
 import { PUBLIC_API_URL } from '$env/static/public';
 import { ResponseError } from './response-error';
-import type { Issue, User, Chat } from './types';
+import type { Issue, User, Chat, Feeback } from './types';
 
 const ISSUES_ENDPOINT = PUBLIC_API_URL + '/issues';
 const USERS_ENDPOINT = PUBLIC_API_URL + '/users';
 const CHAT_ENDPOINT = PUBLIC_API_URL + '/chats';
+const FEEDBACK_ENDPOINT = PUBLIC_API_URL + '/feedbacks';
 
 const requestOptions: RequestInit = {
   credentials: 'include',
@@ -87,4 +88,8 @@ export function fetchChats() {
 
 export function fetchChat(id: string) {
   return sendGetRequest<Chat>(`${CHAT_ENDPOINT}/${id} `);
+}
+
+export function createFeedback(issueId: string, body: string) {
+  return sendPostRequest<Feeback>(`${FEEDBACK_ENDPOINT}/${issueId}`, body);
 }
