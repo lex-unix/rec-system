@@ -121,3 +121,26 @@ async def get_issue_with_operator(
     }
     issue = Issue(**issue_data)
     return issue
+
+
+async def delete_issue(conn: asyncpg.pool.PoolConnectionProxy, issue_id: int):
+    sql = """
+        DELETE FROM issues
+        WHERE id = $1
+    """
+    result = await conn.execute(sql, issue_id)
+    print(result)
+    return
+
+
+async def get_issue_by_id(conn: asyncpg.pool.PoolConnectionProxy, issue_id: int):
+    sql = """
+        SELECT i.id, i.created_at, i.updated_at, i.subject, i.description, i.type, i.status, i.customer_id, i.operator_id
+        FROM issues i
+        WHERE i.id = $1
+    """
+    row = await conn.fetchrow(sql, issue_id)
+    if row is None:
+        return None
+    issue = Issue(**dict(row.items()))
+    return issue

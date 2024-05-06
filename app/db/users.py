@@ -1,6 +1,7 @@
 import asyncpg
 
-from app.models.users import Operator, User
+from app.models.users import Operator
+from app.models.users import User
 from app.models.users import UserRegister
 
 

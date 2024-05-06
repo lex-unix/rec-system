@@ -2,6 +2,7 @@ from dataclasses import asdict
 
 from fastapi import APIRouter
 from fastapi import HTTPException
+from fastapi import Response
 
 import app.db.issues as crud
 from app.api.dependencies import AuthorizeDep
@@ -58,3 +59,15 @@ async def get_issue(issue_id: int, db: DBConnDep, current_user: AuthorizeDep):
     if not issue:
         raise HTTPException(status_code=404, detail='Issue not found')
     return asdict(issue)
+
+
+@router.delete('/{issue_id}')
+async def delete_issue(issue_id: int, db: DBConnDep, current_user: AuthorizeDep):
+    issue = await crud.get_issue_by_id(conn=db, issue_id=issue_id)
+    if issue is None:
+        raise HTTPException(status_code=404, detail='issue not found')
+    if issue.customer_id != current_user.id:
+        raise HTTPException(status_code=403, detail="you can't delete this issue")
+
+    await crud.delete_issue(conn=db, issue_id=issue_id)
+    return Response(status_code=204)
