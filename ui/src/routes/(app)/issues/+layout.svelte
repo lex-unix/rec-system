@@ -4,6 +4,7 @@
   import { onMount } from 'svelte';
   import type { Issue } from '$lib/types';
   import { createChat, createIssue, fetchCustomerIssues } from '$lib/api-utils';
+  import { goto } from '$app/navigation';
 
   let issues: Issue[] = [];
 
@@ -30,6 +31,11 @@
         description: 'New issue is registered'
       }
     });
+
+    goto(`/issues/${issueResponse.data.id}`);
+
+    const response = await fetchCustomerIssues();
+    if (response.ok) issues = response.data;
   }
 </script>
 
