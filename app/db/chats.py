@@ -77,3 +77,39 @@ async def create_message(
         content=chat_msg_in.content,
     )
     return chat_msg
+
+
+# use only when chatbot flag is set to True
+async def get_operator_id_from_chat(
+    conn: asyncpg.pool.PoolConnectionProxy,
+    issue_id: int,
+):
+    sql = """
+        SELECT issues.operator_id
+        FROM issues
+        WHERE issues.id = $1;
+    """
+    operator_id = await conn.fetchval(sql, issue_id)
+
+    print(operator_id)
+
+    return operator_id
+
+
+# only used to load previous chat messages for a chatbot
+async def get_last_messages(
+    conn: asyncpg.pool.PoolConnectionProxy,
+    issue_id: int,
+    limit=10,
+):
+    sql = """
+        SELECT chat_messages.sender_id, chat_messages.content
+        FROM chat_messages
+        INNER JOIN chats ON chat_messages.chat_id = chats.id
+        WHERE chats.issue_id = $1
+        ORDER BY chat_messages.created_at DESC
+        LIMIT $2;
+    """
+    values = (issue_id, limit)
+    rows = await conn.fetch(sql, *values)
+    return rows

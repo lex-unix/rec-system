@@ -26,6 +26,7 @@
     createFeedback
   } from '$lib/api-utils';
 
+  const isChatBot = true;
   let rating: number;
   let review: string = '';
   let dialog: Dialog;
@@ -70,7 +71,7 @@
       socket.close();
     }
 
-    socket = createSocket(`chats/ws/${issueId}`);
+    socket = createSocket(`chats/ws/${issueId}?chat_bot=${isChatBot}`);
     socket.onmessage = event => {
       const data: SocketData = JSON.parse(event.data);
       messages = [...messages, data];
@@ -125,7 +126,12 @@
       {#if chat}
         {#each messages as msg}
           <ChatMessage me={msg.user_id === $user?.id} date={msg.created_at}>
-            {msg.message}
+            {#if isChatBot}
+              <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+              {@html msg.message}
+            {:else}
+              {msg.message}
+            {/if}
           </ChatMessage>
         {/each}
       {/if}
