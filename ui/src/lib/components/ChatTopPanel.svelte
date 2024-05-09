@@ -24,16 +24,17 @@
   import { goto } from '$app/navigation';
   import { createEventDispatcher } from 'svelte';
   import { addToast } from './Toaster.svelte';
-  import type { Issue } from '$lib/types';
-  import { useChatbot } from '$lib/stores';
-
-  export let issue: Issue;
+  import { issues, issue, useChatbot } from '$lib/stores';
+  import { deleteIssue } from '$lib/api-utils';
+  import { page } from '$app/stores';
 
   const dispatch = createEventDispatcher();
 
-  function deleteIssue() {
+  async function removeIssue() {
+    const response = await deleteIssue($page.params.id);
+    if (!response.ok) return;
+    issues.remove(parseInt($page.params.id));
     goto('/issues');
-    // $issues = $issues.filter(c => c.id !== parseInt($page.params.id));
     addToast({
       data: {
         title: 'Issue deleted',
@@ -45,8 +46,6 @@
   function resolve() {
     dispatch('resolve');
   }
-
-  $: console.log($useChatbot);
 </script>
 
 <div
@@ -57,9 +56,11 @@
       <MobileIssuesDrawer />
     </div>
   </div>
-  <h1 class="w-full text-center text-lg font-medium capitalize">
-    {issueType[issue.type]}
-  </h1>
+  {#if $issue}
+    <h1 class="w-full text-center text-lg font-medium capitalize">
+      {issueType[$issue.type]}
+    </h1>
+  {/if}
 
   <div class="absolute inset-y-0 right-4 pl-5">
     <div class="flex h-full items-center gap-5">
@@ -86,7 +87,7 @@
           <InfoIcon slot="icon" class="square-5" />
         </PopoverTrigger>
         <PopoverContent>
-          <IssueInfo {issue} />
+          <IssueInfo />
         </PopoverContent>
       </Popover>
       <Dropdown>
@@ -98,7 +99,7 @@
             <CheckCircle2Icon class="mr-3 square-5" />
             Mark resolved
           </DropdownItem>
-          <DropdownItem on:select={deleteIssue}>
+          <DropdownItem on:select={removeIssue}>
             <Trash2Icon class="mr-3 square-5" />
             Delete ticket
           </DropdownItem>

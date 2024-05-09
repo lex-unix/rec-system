@@ -1,10 +1,8 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { createEventDispatcher } from 'svelte';
-  import type { Issue } from '$lib/types';
   import { issueType } from '$lib/issues';
-
-  export let issues: Issue[];
+  import { issues } from '$lib/stores';
 
   const dispatch = createEventDispatcher();
 
@@ -14,7 +12,7 @@
 </script>
 
 <ul class="list-none space-y-1 pb-4 pt-4">
-  {#each issues as { id, type, description }}
+  {#each $issues as { id, type, description }}
     <li>
       <a
         on:click={select}

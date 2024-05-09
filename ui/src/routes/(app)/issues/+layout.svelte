@@ -2,16 +2,14 @@
   import { SearchBar, IssueList, NewIssueDialog } from '$components';
   import { addToast } from '$components/Toaster.svelte';
   import { onMount } from 'svelte';
-  import type { Issue } from '$lib/types';
   import { createChat, createIssue, fetchCustomerIssues } from '$lib/api-utils';
   import { goto } from '$app/navigation';
-
-  let issues: Issue[] = [];
+  import { issues } from '$lib/stores';
 
   onMount(async () => {
     const respone = await fetchCustomerIssues();
     if (!respone.ok) return;
-    issues = respone.data;
+    $issues = respone.data;
   });
 
   async function addIssue(
@@ -32,10 +30,9 @@
       }
     });
 
-    goto(`/issues/${issueResponse.data.id}`);
+    issues.add(issueResponse.data);
 
-    const response = await fetchCustomerIssues();
-    if (response.ok) issues = response.data;
+    goto(`/issues/${issueResponse.data.id}`);
   }
 </script>
 
@@ -49,7 +46,7 @@
       <SearchBar />
     </div>
     <div class="issues-list w-full flex-1 overflow-y-auto md:px-3 lg:px-5">
-      <IssueList {issues} />
+      <IssueList />
     </div>
     <div class="mt-auto h-20 max-h-20 w-full border-t border-t-navy-200/10">
       <div class="flex h-full items-center justify-center px-5">

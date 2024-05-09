@@ -18,7 +18,8 @@
   import { onDestroy } from 'svelte';
   import { user } from '$lib/stores';
   import { page } from '$app/stores';
-  import type { SocketData, Issue, Chat } from '$lib/types';
+  import type { SocketData, Chat } from '$lib/types';
+  import { issue } from '$lib/stores';
   import { createSocket } from '$lib/ws';
   import {
     fetchChat,
@@ -33,12 +34,9 @@
   let messages: SocketData[] = [];
   let socket: WebSocket;
   let chat: Chat;
-  let issue: Issue;
 
   onDestroy(() => {
-    if (socket) {
-      socket.close();
-    }
+    socket && socket.close();
   });
 
   $: issueId = $page.params.id;
@@ -59,7 +57,7 @@
   async function loadIssue(issueId: string) {
     const response = await fetchCustomerIssue(issueId);
     if (!response.ok) return;
-    issue = response.data;
+    $issue = response.data;
   }
 
   async function loadChat(issueId: string) {
@@ -123,7 +121,7 @@
 
 <div class="w-full">
   {#if issue}
-    <ChatTopPanel {issue} on:resolve={() => dialog.show()} />
+    <ChatTopPanel on:resolve={() => dialog.show()} />
   {/if}
 
   <div class="relative h-[calc(100%-80px)] w-full overflow-y-auto">

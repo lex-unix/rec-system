@@ -58,6 +58,27 @@ async function sendGetRequest<T>(
   }
 }
 
+async function sendDeleteRequest(
+  endpoint: string
+): Promise<{ ok: true } | { ok: false; error: ResponseError }> {
+  try {
+    const response = await fetch(endpoint, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+    if (!response.ok) {
+      const json = await response.json();
+      const error = new ResponseError(response.status, json.detail);
+      return { ok: false, error };
+    }
+    return { ok: true };
+  } catch (e) {
+    console.error(e);
+    const error = new ResponseError(500, 'The server encountered an error');
+    return { ok: false, error };
+  }
+}
+
 export function login(body: string) {
   return sendPostRequest<User>(`${USERS_ENDPOINT}/login`, body);
 }
@@ -92,4 +113,8 @@ export function fetchChat(id: string) {
 
 export function createFeedback(issueId: string, body: string) {
   return sendPostRequest<Feeback>(`${FEEDBACK_ENDPOINT}/${issueId}`, body);
+}
+
+export function deleteIssue(issueId: string) {
+  return sendDeleteRequest(`${ISSUES_ENDPOINT}/${issueId}`);
 }

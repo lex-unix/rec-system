@@ -3,10 +3,8 @@
   import { crossfade } from 'svelte/transition';
   import { cubicInOut } from 'svelte/easing';
   import ResizablePannel from './ResizablePanel.svelte';
-  import type { Issue } from '$lib/types';
   import { issueType, issueStatus } from '$lib/issues';
-
-  export let issue: Issue;
+  import { issue } from '$lib/stores';
 
   const {
     elements: { root, list, content, trigger },
@@ -52,49 +50,51 @@
         </button>
       {/each}
     </div>
-    <div use:melt={$content('tab-1')} class="focus:outline-none">
-      <h3 class="border-b border-navy-200/10 pb-4 text-lg font-medium">
-        Issue details
-      </h3>
-      <div class="divide-y divide-navy-200/10">
-        <div class="space-y-1 py-4">
-          <p class="text-navy-400">Issue status:</p>
-          <p class="text-navy-100">{issueStatus[issue.status]}</p>
-        </div>
-        <div class="space-y-1 py-4">
-          <p class="text-navy-400">Issue type:</p>
-          <p class="text-navy-100">{issueType[issue.type]}</p>
-        </div>
-        <div class="space-y-1 py-4">
-          <p class="text-navy-400">Issue subject:</p>
-          <p class="text-navy-100">{issue.subject}</p>
-        </div>
-        <div class="space-y-1 py-4">
-          <p class="text-navy-400">Issue description:</p>
-          <p class="text-navy-100">
-            {issue.description}
-          </p>
-        </div>
-      </div>
-    </div>
-    <div use:melt={$content('tab-2')} class="focus:outline-none">
-      <h3 class="border-b border-navy-200/10 pb-4 text-lg font-medium">
-        Operator details
-      </h3>
-      <div class="divide-y divide-navy-200/10">
-        <div class="space-y-1 py-4">
-          <p class="text-navy-400">Full name:</p>
-          <p class="text-navy-100">{issue.operator.full_name}</p>
-        </div>
-        <div class="space-y-1 py-4">
-          <p class="text-navy-400">Average rating:</p>
-          <p class="text-navy-100">{issue.operator.rating}</p>
-        </div>
-        <div class="space-y-1 py-4">
-          <p class="text-navy-400">Resolved issues:</p>
-          <p class="text-navy-100">{issue.operator.resolved_issues}</p>
+    {#if $issue}
+      <div use:melt={$content('tab-1')} class="focus:outline-none">
+        <h3 class="border-b border-navy-200/10 pb-4 text-lg font-medium">
+          Issue details
+        </h3>
+        <div class="divide-y divide-navy-200/10">
+          <div class="space-y-1 py-4">
+            <p class="text-navy-400">Issue status:</p>
+            <p class="text-navy-100">{issueStatus[$issue.status]}</p>
+          </div>
+          <div class="space-y-1 py-4">
+            <p class="text-navy-400">Issue type:</p>
+            <p class="text-navy-100">{issueType[$issue.type]}</p>
+          </div>
+          <div class="space-y-1 py-4">
+            <p class="text-navy-400">Issue subject:</p>
+            <p class="text-navy-100">{$issue.subject}</p>
+          </div>
+          <div class="space-y-1 py-4">
+            <p class="text-navy-400">Issue description:</p>
+            <p class="text-navy-100">
+              {$issue.description}
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+      <div use:melt={$content('tab-2')} class="focus:outline-none">
+        <h3 class="border-b border-navy-200/10 pb-4 text-lg font-medium">
+          Operator details
+        </h3>
+        <div class="divide-y divide-navy-200/10">
+          <div class="space-y-1 py-4">
+            <p class="text-navy-400">Full name:</p>
+            <p class="text-navy-100">{$issue.operator.full_name}</p>
+          </div>
+          <div class="space-y-1 py-4">
+            <p class="text-navy-400">Average rating:</p>
+            <p class="text-navy-100">{$issue.operator.rating}</p>
+          </div>
+          <div class="space-y-1 py-4">
+            <p class="text-navy-400">Resolved issues:</p>
+            <p class="text-navy-100">{$issue.operator.resolved_issues}</p>
+          </div>
+        </div>
+      </div>
+    {/if}
   </div>
 </ResizablePannel>
