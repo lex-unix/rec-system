@@ -25,8 +25,8 @@
     fetchCustomerIssue,
     createFeedback
   } from '$lib/api-utils';
+  import { useChatbot } from '$lib/stores';
 
-  const isChatBot = true;
   let rating: number;
   let review: string = '';
   let dialog: Dialog;
@@ -47,6 +47,13 @@
     loadChat(issueId);
     loadIssue(issueId);
     setupSocket(issueId);
+  }
+
+  $: {
+    if ($useChatbot || !$useChatbot) {
+      socket.close();
+      setupSocket(issueId);
+    }
   }
 
   async function loadIssue(issueId: string) {
@@ -71,7 +78,7 @@
       socket.close();
     }
 
-    socket = createSocket(`chats/ws/${issueId}?chat_bot=${isChatBot}`);
+    socket = createSocket(`chats/ws/${issueId}?chat_bot=${$useChatbot}`);
     socket.onmessage = event => {
       const data: SocketData = JSON.parse(event.data);
       messages = [...messages, data];
@@ -126,12 +133,8 @@
       {#if chat}
         {#each messages as msg}
           <ChatMessage me={msg.user_id === $user?.id} date={msg.created_at}>
-            {#if isChatBot}
-              <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-              {@html msg.message}
-            {:else}
-              {msg.message}
-            {/if}
+            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+            {@html msg.message}
           </ChatMessage>
         {/each}
       {/if}

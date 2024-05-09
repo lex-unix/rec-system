@@ -91,8 +91,6 @@ async def get_operator_id_from_chat(
     """
     operator_id = await conn.fetchval(sql, issue_id)
 
-    print(operator_id)
-
     return operator_id
 
 

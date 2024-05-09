@@ -3,10 +3,14 @@
     InfoIcon,
     CheckCircle2Icon,
     MoreHorizontalIcon,
-    Trash2Icon
+    Trash2Icon,
+    CogIcon
   } from 'lucide-svelte';
   import {
     IssueInfo,
+    Switch,
+    SwitchButton,
+    SwitchLabel,
     Popover,
     PopoverTrigger,
     PopoverContent,
@@ -16,12 +20,12 @@
     DropdownItem,
     MobileIssuesDrawer
   } from '$components';
-  // import { page } from '$app/stores';
   import { issueType } from '$lib/issues';
   import { goto } from '$app/navigation';
   import { createEventDispatcher } from 'svelte';
   import { addToast } from './Toaster.svelte';
   import type { Issue } from '$lib/types';
+  import { useChatbot } from '$lib/stores';
 
   export let issue: Issue;
 
@@ -41,6 +45,8 @@
   function resolve() {
     dispatch('resolve');
   }
+
+  $: console.log($useChatbot);
 </script>
 
 <div
@@ -57,6 +63,24 @@
 
   <div class="absolute inset-y-0 right-4 pl-5">
     <div class="flex h-full items-center gap-5">
+      <Popover>
+        <PopoverTrigger class="rounded-full p-2">
+          <CogIcon slot="icon" class="square-5" />
+        </PopoverTrigger>
+        <PopoverContent class="min-w-[300px]">
+          <div>
+            <h2 class="text-center text-lg font-medium">Chat settings</h2>
+            <div class="pt-8">
+              <Switch enabled={useChatbot}>
+                <div class="flex items-center gap-3">
+                  <SwitchLabel>Use chatbot?</SwitchLabel>
+                  <SwitchButton />
+                </div>
+              </Switch>
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
       <Popover>
         <PopoverTrigger class="rounded-full p-2">
           <InfoIcon slot="icon" class="square-5" />

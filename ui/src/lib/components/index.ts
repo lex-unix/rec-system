@@ -36,3 +36,6 @@ export { default as ChatTopPanel } from './ChatTopPanel.svelte';
 export { default as MobileIssuesDrawer } from './MobileIssuesDrawer.svelte';
 export { default as NewIssueDialog } from './NewIssueDialog.svelte';
 export { default as Toaster } from './Toaster.svelte';
+export { default as Switch } from './Switch/Switch.svelte';
+export { default as SwitchLabel } from './Switch/Label.svelte';
+export { default as SwitchButton } from './Switch/Button.svelte';
