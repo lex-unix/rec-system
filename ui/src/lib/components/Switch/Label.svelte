@@ -8,6 +8,6 @@
   const id = getContext<string>('id');
 </script>
 
-<label for={id} id="{id}-label" class={cn('text-navy-300', className)}>
+<label for={id} id="{id}-label" class={cn('text-navy-200', className)}>
   <slot />
 </label>

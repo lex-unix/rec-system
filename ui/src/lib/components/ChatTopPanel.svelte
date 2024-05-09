@@ -72,7 +72,7 @@
             <h2 class="text-center text-lg font-medium">Chat settings</h2>
             <div class="pt-8">
               <Switch enabled={useChatbot}>
-                <div class="flex items-center gap-3">
+                <div class="flex items-center justify-between gap-3">
                   <SwitchLabel>Use chatbot?</SwitchLabel>
                   <SwitchButton />
                 </div>
