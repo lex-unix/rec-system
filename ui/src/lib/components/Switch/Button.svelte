@@ -16,7 +16,7 @@
   {id}
   use:melt={$root}
   class={cn(
-    'relative h-6 cursor-default rounded-full border border-navy-200/20 bg-navy-700 transition-colors data-[state=checked]:bg-green-400',
+    'relative h-6 rounded-full border border-navy-200/20 bg-navy-700 transition-colors data-[state=checked]:bg-green-400',
     className
   )}
   aria-labelledby="{id}-label"
