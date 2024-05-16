@@ -2,7 +2,12 @@
   import { SearchBar, IssueList, NewIssueDialog } from '$components';
   import { addToast } from '$components/Toaster.svelte';
   import { onMount } from 'svelte';
-  import { createChat, createIssue, fetchCustomerIssues } from '$lib/api-utils';
+  import {
+    createChat,
+    createIssue,
+    fetchCustomerIssues,
+    changeOperatoravAilability
+  } from '$lib/api-utils';
   import { goto } from '$app/navigation';
   import { issues } from '$lib/stores';
 
@@ -22,6 +27,14 @@
     body = JSON.stringify({ issue_id: issueResponse.data.id });
     const chatResponse = await createChat(body);
     if (!chatResponse.ok) return;
+
+    body = JSON.stringify({ availability: false });
+    const operatorResponse = await changeOperatoravAilability(
+      issueResponse.data.operator_id,
+      body
+    );
+
+    if (!operatorResponse.ok) return;
 
     addToast({
       data: {

@@ -132,8 +132,6 @@ def load_models() -> dict[str, tfrs.models.Model]:
 
 
 def predict(models, customer_name: str, ticket_subject: str):
-    # models = load_models()
-
     customer_test = {
         'customer_name': tf.expand_dims(customer_name, axis=0),
         'ticket_subject': tf.expand_dims(ticket_subject, axis=0),

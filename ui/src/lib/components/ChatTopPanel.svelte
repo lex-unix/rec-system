@@ -95,17 +95,17 @@
           <MoreHorizontalIcon class="square-5" />
         </DropdownTrigger>
         <DropdownMenu>
-          <DropdownItem
-            on:select={resolve}
-            disabled={$issue?.status === 'closed'}
-          >
-            <CheckCircle2Icon class="mr-3 square-5" />
-            Close issue
-          </DropdownItem>
-          <DropdownItem on:select={removeIssue}>
-            <Trash2Icon class="mr-3 square-5" />
-            Delete issue
-          </DropdownItem>
+          {#if $issue?.status !== 'closed'}
+            <DropdownItem on:select={resolve}>
+              <CheckCircle2Icon class="mr-3 square-5" />
+              Close issue
+            </DropdownItem>
+          {:else}
+            <DropdownItem on:select={removeIssue}>
+              <Trash2Icon class="mr-3 square-5" />
+              Delete issue
+            </DropdownItem>
+          {/if}
         </DropdownMenu>
       </Dropdown>
     </div>

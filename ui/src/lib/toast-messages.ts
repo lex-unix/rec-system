@@ -35,3 +35,10 @@ export const ISSUE_LOADED_TOAST_ERROR_MSG: ToastData = {
       'There was an error loading your issue. Please try again later.'
   }
 };
+
+export const ISSUE_CREATED_TOAST_MSG: ToastData = {
+  data: {
+    title: 'Issue formed',
+    description: 'New issue is registered'
+  }
+};

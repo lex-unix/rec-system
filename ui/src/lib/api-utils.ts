@@ -122,3 +122,13 @@ export function deleteIssue(issueId: string) {
 export function changeIssueStatus(issueId: string, body: string) {
   return sendPostRequest(`${ISSUES_ENDPOINT}/customer/${issueId}/status`, body);
 }
+
+export function changeOperatoravAilability(
+  operatorId: string | number,
+  body: string
+) {
+  return sendPostRequest(
+    `${USERS_ENDPOINT}/operators/${operatorId}/availability`,
+    body
+  );
+}

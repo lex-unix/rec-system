@@ -10,7 +10,7 @@ from app.api.dependencies import UserSessionDep
 from app.db import users as crud
 from app.internal.hash import compare_hash
 from app.internal.hash import hash_password
-from app.models.users import UserLogin
+from app.models.users import OperatorAvailabilityUpdate, UserLogin
 from app.models.users import UserPublic
 from app.models.users import UserRegister
 
@@ -48,3 +48,22 @@ async def logout(user_session: UserSessionDep):
 @router.get('/me', response_model=UserPublic)
 async def me(current_user: AuthorizeDep):
     return asdict(current_user)
+
+
+@router.post('/operators/{operator_id}/availability')
+async def change_operator_availability(
+    operator_id: int, db: DBConnDep, operator_in: OperatorAvailabilityUpdate
+):
+    operator = await crud.get_operator_by_id(conn=db, operator_id=operator_id)
+    if not operator:
+        return HTTPException(status_code=404, detail='operator not found')
+
+    await crud.update_operator_availability(
+        conn=db,
+        operator_id=operator_id,
+        operator_in=operator_in,
+    )
+
+    operator.availability = operator_in.availability
+
+    return operator

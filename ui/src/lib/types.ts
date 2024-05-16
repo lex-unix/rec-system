@@ -16,7 +16,8 @@ export type Issue = {
   description: string;
   status: IssueStatus;
   type: IssueType;
-  user_id: number;
+  customer_id: number;
+  operator_id: number;
   operator: Operator;
 };
 

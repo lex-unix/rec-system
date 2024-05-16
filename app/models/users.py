@@ -50,3 +50,8 @@ class Operator:
     availability: bool
     full_name: str
     resolved_issues: int = 0
+
+
+@dataclass
+class OperatorAvailabilityUpdate:
+    availability: bool

@@ -1,6 +1,7 @@
 import asyncpg
 
 from app.models.users import Operator
+from app.models.users import OperatorAvailabilityUpdate
 from app.models.users import User
 from app.models.users import UserRegister
 
@@ -68,3 +69,42 @@ async def get_operator_by_name(conn: asyncpg.pool.PoolConnectionProxy, full_name
         resolved_issues=0,
     )
     return operator
+
+
+async def get_operator_by_id(
+    conn: asyncpg.pool.PoolConnectionProxy,
+    operator_id: int,
+):
+    sql = """
+        SELECT u.id, u.created_at, u.updated_at, u.full_name, o.rating, o.availability
+        FROM users u
+        JOIN operators o ON o.id = u.id
+        WHERE o.id = $1
+    """
+    row = await conn.fetchrow(sql, operator_id)
+    if not row:
+        return None
+    operator = Operator(
+        id=row['id'],
+        created_at=row['created_at'],
+        updated_at=row['updated_at'],
+        rating=row['rating'],
+        availability=row['availability'],
+        full_name=row['full_name'],
+        resolved_issues=0,
+    )
+    return operator
+
+
+async def update_operator_availability(
+    conn: asyncpg.pool.PoolConnectionProxy,
+    operator_id: int,
+    operator_in: OperatorAvailabilityUpdate,
+):
+    sql = """
+        UPDATE operators
+        SET availability = $1
+        WHERE id = $2
+    """
+    values = (operator_in.availability, operator_id)
+    await conn.execute(sql, *values)

@@ -25,7 +25,8 @@
     fetchChat,
     fetchCustomerIssue,
     createFeedback,
-    changeIssueStatus
+    changeIssueStatus,
+    changeOperatoravAilability
   } from '$lib/api-utils';
   import { useChatbot } from '$lib/stores';
   import {
@@ -119,6 +120,15 @@
     {
       const body = JSON.stringify({ status: 'closed' });
       const response = await changeIssueStatus(issueId, body);
+      ok = response.ok;
+    }
+
+    {
+      const body = JSON.stringify({ availability: true });
+      const response = await changeOperatoravAilability(
+        $issue!.operator.id,
+        body
+      );
       ok = response.ok;
     }
 
