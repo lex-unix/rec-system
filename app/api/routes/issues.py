@@ -40,7 +40,7 @@ async def create_issue(
         if operator:
             break
     if operator is None:
-        raise HTTPException(status_code=204, detail='Could not find any operator')
+        raise HTTPException(status_code=503, detail='there are no available operators')
     issue = await crud.create_issue(
         conn=db,
         issue_in=issue_in,
