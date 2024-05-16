@@ -95,13 +95,16 @@
           <MoreHorizontalIcon class="square-5" />
         </DropdownTrigger>
         <DropdownMenu>
-          <DropdownItem on:select={resolve}>
+          <DropdownItem
+            on:select={resolve}
+            disabled={$issue?.status === 'closed'}
+          >
             <CheckCircle2Icon class="mr-3 square-5" />
-            Mark resolved
+            Close issue
           </DropdownItem>
           <DropdownItem on:select={removeIssue}>
             <Trash2Icon class="mr-3 square-5" />
-            Delete ticket
+            Delete issue
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>

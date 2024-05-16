@@ -2,6 +2,7 @@ import asyncpg
 
 from app.models.issues import Issue
 from app.models.issues import IssueCreate
+from app.models.issues import IssueStatusUpdate
 from app.models.users import Operator
 
 
@@ -144,3 +145,18 @@ async def get_issue_by_id(conn: asyncpg.pool.PoolConnectionProxy, issue_id: int)
         return None
     issue = Issue(**dict(row.items()))
     return issue
+
+
+async def update_status(
+    conn: asyncpg.pool.PoolConnectionProxy,
+    issue_id: int,
+    issue_in: IssueStatusUpdate,
+):
+    sql = """
+        UPDATE issues
+        SET status = $1
+        WHERE id = $2
+    """
+    values = (issue_in.status, issue_id)
+    result = await conn.execute(sql, *values)
+    print(result)

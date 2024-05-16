@@ -118,3 +118,7 @@ export function createFeedback(issueId: string, body: string) {
 export function deleteIssue(issueId: string) {
   return sendDeleteRequest(`${ISSUES_ENDPOINT}/${issueId}`);
 }
+
+export function changeIssueStatus(issueId: string, body: string) {
+  return sendPostRequest(`${ISSUES_ENDPOINT}/customer/${issueId}/status`, body);
+}

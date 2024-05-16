@@ -20,6 +20,11 @@ class IssueCreate:
 
 
 @dataclass
+class IssueStatusUpdate:
+    status: str
+
+
+@dataclass
 class Issue:
     id: int
     created_at: datetime

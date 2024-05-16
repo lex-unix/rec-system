@@ -10,6 +10,7 @@ from app.api.dependencies import DBConnDep
 from app.api.dependencies import MLModelsDep
 from app.db.users import get_operator_by_name
 from app.models.issues import IssueCreate
+from app.models.issues import IssueStatusUpdate
 from nn.main import predict
 
 router = APIRouter()
@@ -71,3 +72,27 @@ async def delete_issue(issue_id: int, db: DBConnDep, current_user: AuthorizeDep)
 
     await crud.delete_issue(conn=db, issue_id=issue_id)
     return Response(status_code=204)
+
+
+@router.post('/customer/{issue_id}/status')
+async def change_status(
+    issue_id: int,
+    current_user: AuthorizeDep,
+    db: DBConnDep,
+    issue_in: IssueStatusUpdate,
+):
+    issue = await crud.get_issue_with_operator(
+        conn=db,
+        issue_id=issue_id,
+        customer_id=current_user.id,
+    )
+    if issue is None:
+        raise HTTPException(status_code=404, detail='issue not found')
+    if issue.customer_id != current_user.id:
+        raise HTTPException(status_code=403, detail="you can't edit this issue")
+
+    await crud.update_status(conn=db, issue_id=issue_id, issue_in=issue_in)
+
+    issue.status = issue_in.status
+
+    return issue

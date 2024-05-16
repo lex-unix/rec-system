@@ -24,9 +24,16 @@
   import {
     fetchChat,
     fetchCustomerIssue,
-    createFeedback
+    createFeedback,
+    changeIssueStatus
   } from '$lib/api-utils';
   import { useChatbot } from '$lib/stores';
+  import {
+    CHAT_LOADED_TOAST_ERROR_MSG,
+    ISSUE_LOADED_TOAST_ERROR_MSG,
+    ISSUE_RESOLVED_TOAST_MSG,
+    ISSUE_RESOLVED_TOAST_ERROR_MSG
+  } from '$lib/toast-messages';
 
   let rating: number;
   let review: string = '';
@@ -39,30 +46,30 @@
     socket && socket.close();
   });
 
-  $: issueId = $page.params.id;
-
   $: {
-    loadChat(issueId);
-    loadIssue(issueId);
-    setupSocket(issueId);
+    loadChat($page.params.id);
+    loadIssue($page.params.id);
   }
 
   $: {
-    if ($useChatbot || !$useChatbot) {
-      socket.close();
-      setupSocket(issueId);
-    }
+    setupSocket($page.params.id, $useChatbot);
   }
 
   async function loadIssue(issueId: string) {
     const response = await fetchCustomerIssue(issueId);
-    if (!response.ok) return;
+    if (!response.ok) {
+      addToast(ISSUE_LOADED_TOAST_ERROR_MSG);
+      return;
+    }
     $issue = response.data;
   }
 
   async function loadChat(issueId: string) {
     const response = await fetchChat(issueId);
-    if (!response.ok) return;
+    if (!response.ok) {
+      addToast(CHAT_LOADED_TOAST_ERROR_MSG);
+      return;
+    }
     chat = response.data;
     messages = chat.messages.map(m => ({
       message: m.content,
@@ -71,12 +78,12 @@
     }));
   }
 
-  function setupSocket(issueId: string) {
+  function setupSocket(issueId: string, useChatbot: boolean) {
     if (socket) {
       socket.close();
     }
 
-    socket = createSocket(`chats/ws/${issueId}?chat_bot=${$useChatbot}`);
+    socket = createSocket(`chats/ws/${issueId}?chat_bot=${useChatbot}`);
     socket.onmessage = event => {
       const data: SocketData = JSON.parse(event.data);
       messages = [...messages, data];
@@ -88,6 +95,7 @@
   function send(e: CustomEvent<{ message: string }>) {
     if (socket.readyState === WebSocket.OPEN) {
       socket.send(e.detail.message);
+
       const message: SocketData = {
         message: e.detail.message,
         user_id: $user?.id as number,
@@ -100,17 +108,27 @@
   }
 
   async function resolve() {
-    const body = JSON.stringify({ rating });
-    console.log($page.params.id);
-    const response = await createFeedback($page.params.id, body);
-    if (response.ok) {
-      addToast({
-        data: {
-          title: 'Issue resolved',
-          description: 'Issue is now closed. Thank you for your feedback'
-        }
-      });
+    const issueId = $page.params.id;
+    let ok = true;
+    {
+      const body = JSON.stringify({ rating });
+      const response = await createFeedback(issueId, body);
+      ok = response.ok;
     }
+
+    {
+      const body = JSON.stringify({ status: 'closed' });
+      const response = await changeIssueStatus(issueId, body);
+      ok = response.ok;
+    }
+
+    if (ok) {
+      addToast(ISSUE_RESOLVED_TOAST_MSG);
+      issue.updateStatus('closed');
+    } else {
+      addToast(ISSUE_RESOLVED_TOAST_ERROR_MSG);
+    }
+
     dialog.dismiss();
   }
 
