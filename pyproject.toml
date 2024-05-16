@@ -25,6 +25,7 @@ tensorflow-ranking = "0.5.3"
 bcrypt = "4.0.1"
 ollama = "^0.1.9"
 markdown = "^3.6"
+ipywidgets = "^8.1.2"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.10.0"

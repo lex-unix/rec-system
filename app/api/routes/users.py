@@ -10,7 +10,8 @@ from app.api.dependencies import UserSessionDep
 from app.db import users as crud
 from app.internal.hash import compare_hash
 from app.internal.hash import hash_password
-from app.models.users import OperatorAvailabilityUpdate, UserLogin
+from app.models.users import OperatorAvailabilityUpdate
+from app.models.users import UserLogin
 from app.models.users import UserPublic
 from app.models.users import UserRegister
 

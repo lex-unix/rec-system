@@ -1,7 +1,8 @@
 *.png
 /.sqllsrc.json
-/models/*
-!/models/.gitkeep
+/model-weights/*
+!/model-weights/.gitkeep
+/old-model-weights
 
 
 # ---- Svelte ----

@@ -13,8 +13,8 @@ logger = tf.get_logger()
 logger.setLevel(logging.ERROR)
 
 DATASET_PATH = os.path.join(os.getcwd(), 'datasets', 'clean_data.csv')
-RETRIEVAL_MODEL_PATH = os.path.join(os.getcwd(), 'models', 'retrieval_model')
-RANKING_MODEL_PATH = os.path.join(os.getcwd(), 'models', 'ranking_model')
+RETRIEVAL_MODEL_PATH = os.path.join(os.getcwd(), 'model-weights', 'retrieval_model')
+RANKING_MODEL_PATH = os.path.join(os.getcwd(), 'model-weights', 'ranking_model')
 
 
 def load_data():
@@ -30,6 +30,8 @@ def preprocess_data(df: pd.DataFrame):
             'operator_name': x['operator'],
             'customer_name': x['customer_name'],
             'ticket_subject': x['ticket_subject'],
+            'ticket_type': x['ticket_type'],
+            'ticket_description': x['ticket_description'],
         }
     )
     return operators, customer_ratings
@@ -45,8 +47,18 @@ def prepare_data(operators, customer_ratings):
     operator_names = operators.batch(2_000)
     customer_names = customer_ratings.batch(4_000).map(lambda x: x['customer_name'])
     ticket_subjects = customer_ratings.batch(200).map(lambda x: x['ticket_subject'])
+    ticket_types = customer_ratings.batch(200).map(lambda x: x['ticket_type'])
+    ticket_descriptions = customer_ratings.batch(200).map(
+        lambda x: x['ticket_description']
+    )
 
-    return operator_names, customer_names, ticket_subjects
+    return (
+        operator_names,
+        customer_names,
+        ticket_subjects,
+        ticket_types,
+        ticket_descriptions,
+    )
 
 
 def load_retrieval_model(
@@ -54,7 +66,9 @@ def load_retrieval_model(
     unique_customer_names,
     unique_operator_names,
     ticket_subjects,
-    layer_sizes=[1024, 512, 128, 64, 32],
+    ticket_descriptions,
+    ticket_types,
+    layer_sizes=[1024, 256, 128, 64, 32],
 ):
     retrieval_model = RetrievalModel(
         operators=operators,
@@ -62,8 +76,10 @@ def load_retrieval_model(
         unique_customer_names=unique_customer_names,
         unique_operator_names=unique_operator_names,
         ticket_subjects=ticket_subjects,
+        ticket_types=ticket_types,
+        ticket_descriptions=ticket_descriptions,
     )
-    retrieval_model.compile(optimizer=tf.keras.optimizers.Adagrad(learning_rate=0.02))
+    retrieval_model.compile(optimizer=tf.keras.optimizers.Adagrad(learning_rate=0.001))
     retrieval_model.load_weights(RETRIEVAL_MODEL_PATH).expect_partial()
 
     return retrieval_model
@@ -88,7 +104,7 @@ def load_ranking_model(unique_customer_names, unique_operator_names):
         unique_customer_names=unique_customer_names,
         unique_operator_names=unique_operator_names,
     )
-    ranking_model.compile(optimizer=tf.keras.optimizers.Adagrad(learning_rate=0.02))
+    ranking_model.compile(optimizer=tf.keras.optimizers.Adagrad(learning_rate=0.002))
     ranking_model.load_weights(RANKING_MODEL_PATH).expect_partial()
 
     return ranking_model
@@ -99,10 +115,13 @@ def load_models() -> dict[str, tfrs.models.Model]:
 
     operators, customer_ratings = preprocess_data(df)
 
-    operator_names, customer_names, ticket_subjects = prepare_data(
-        operators,
-        customer_ratings,
+    operator_names, customer_names, ticket_subjects, ticket_types, ticket_descriptions = (
+        prepare_data(
+            operators,
+            customer_ratings,
+        )
     )
+    print(ticket_types)
 
     unique_operator_names, unique_customer_names = get_unqiue_operators_and_customers(
         operator_names,
@@ -114,6 +133,8 @@ def load_models() -> dict[str, tfrs.models.Model]:
         unique_customer_names=unique_customer_names,
         unique_operator_names=unique_operator_names,
         ticket_subjects=ticket_subjects,
+        ticket_types=ticket_types,
+        ticket_descriptions=ticket_descriptions,
     )
     ranking_model = load_ranking_model(
         unique_operator_names=unique_operator_names,
@@ -131,26 +152,34 @@ def load_models() -> dict[str, tfrs.models.Model]:
     return models
 
 
-def predict(models, customer_name: str, ticket_subject: str):
-    customer_test = {
+def predict(
+    models,
+    customer_name: str,
+    ticket_subject: str,
+    ticket_type: str,
+    ticket_description: str,
+):
+    customer_input = {
         'customer_name': tf.expand_dims(customer_name, axis=0),
         'ticket_subject': tf.expand_dims(ticket_subject, axis=0),
+        'ticket_type': tf.expand_dims(ticket_type, axis=0),
+        'ticket_description': tf.expand_dims(ticket_description, axis=-1),
     }
 
-    _, operator_suggestions = models['index'](customer_test)
+    _, operator_suggestions = models['index'](customer_input)
 
     suggested_titles = operator_suggestions[0].numpy()
 
-    test_ratings = {}
+    output = {}
     for operator_name in suggested_titles:
-        test_ratings[operator_name] = models['ranking'](
+        output[operator_name] = models['ranking'](
             {
                 'customer_name': np.array([customer_name]),
                 'operator_name': np.array([operator_name]),
             }
         )
     results = []
-    for name, score in sorted(test_ratings.items(), key=lambda x: x[1], reverse=True):
+    for name, score in sorted(output.items(), key=lambda x: x[1], reverse=True):
         results.append({'operator': name.decode('utf-8'), 'rating': score.numpy()[0, 0]})
 
     return results

@@ -33,6 +33,8 @@ async def create_issue(
         models=ml_models,
         customer_name=current_user.full_name,
         ticket_subject=issue_in.subject,
+        ticket_type=issue_in.type,
+        ticket_description=issue_in.description,
     )
     operator = None
     for suggestion in suggested_operators:

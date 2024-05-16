@@ -3,17 +3,20 @@ import tensorflow_recommenders as tfrs
 
 
 class CustomerModel(tf.keras.Model):
-    def __init__(self, unique_customer_names, ticket_subjects):
+    def __init__(
+        self, unique_customer_names, ticket_subjects, ticket_types, ticket_descriptions
+    ):
         super().__init__()
 
         max_tokens = 10_000
+        embedding_dim = 32
 
         self.customer_embedding = tf.keras.Sequential(
             [
                 tf.keras.layers.StringLookup(
                     vocabulary=unique_customer_names, mask_token=None
                 ),
-                tf.keras.layers.Embedding(len(unique_customer_names) + 1, 32),
+                tf.keras.layers.Embedding(len(unique_customer_names) + 1, embedding_dim),
             ]
         )
 
@@ -21,21 +24,49 @@ class CustomerModel(tf.keras.Model):
             max_tokens=max_tokens
         )
 
+        self.ticket_description_vectorizer = tf.keras.layers.TextVectorization(
+            max_tokens=max_tokens
+        )
+
+        self.ticket_type_vectorizer = tf.keras.layers.TextVectorization(
+            max_tokens=max_tokens
+        )
+
         self.ticket_subject_embedding = tf.keras.Sequential(
             [
                 self.ticket_subject_vectorizer,
-                tf.keras.layers.Embedding(max_tokens, 32),
+                tf.keras.layers.Embedding(max_tokens, embedding_dim),
+                tf.keras.layers.GlobalAveragePooling1D(),
+            ]
+        )
+
+        self.ticket_description_embedding = tf.keras.Sequential(
+            [
+                self.ticket_description_vectorizer,
+                tf.keras.layers.Embedding(max_tokens, embedding_dim),
+                tf.keras.layers.GlobalAveragePooling1D(),
+            ]
+        )
+
+        self.ticket_type_embedding = tf.keras.Sequential(
+            [
+                self.ticket_type_vectorizer,
+                tf.keras.layers.Embedding(max_tokens, embedding_dim),
                 tf.keras.layers.GlobalAveragePooling1D(),
             ]
         )
 
         self.ticket_subject_vectorizer.adapt(ticket_subjects)
+        self.ticket_description_vectorizer.adapt(ticket_descriptions)
+        self.ticket_type_vectorizer.adapt(ticket_types)
 
     def call(self, inputs):
         return tf.concat(
             [
                 self.customer_embedding(inputs['customer_name']),
                 self.ticket_subject_embedding(inputs['ticket_subject']),
+                self.ticket_description_embedding(inputs['ticket_description']),
+                self.ticket_type_embedding(inputs['ticket_type']),
             ],
             axis=1,
         )
@@ -59,10 +90,19 @@ class OperatorModel(tf.keras.Model):
 
 
 class QueryModel(tf.keras.Model):
-    def __init__(self, layer_sizes, unique_customer_names, ticket_subjects):
+    def __init__(
+        self,
+        layer_sizes,
+        unique_customer_names,
+        ticket_subjects,
+        ticket_types,
+        ticket_descriptions,
+    ):
         super().__init__()
 
-        self.embedding_model = CustomerModel(unique_customer_names, ticket_subjects)
+        self.embedding_model = CustomerModel(
+            unique_customer_names, ticket_subjects, ticket_types, ticket_descriptions
+        )
 
         self.dense_layers = tf.keras.Sequential()
 
@@ -104,9 +144,17 @@ class RetrievalModel(tfrs.models.Model):
         unique_operator_names,
         unique_customer_names,
         ticket_subjects,
+        ticket_types,
+        ticket_descriptions,
     ):
         super().__init__()
-        self.query_model = QueryModel(layer_sizes, unique_customer_names, ticket_subjects)
+        self.query_model = QueryModel(
+            layer_sizes,
+            unique_customer_names,
+            ticket_subjects,
+            ticket_types,
+            ticket_descriptions,
+        )
         self.candidate_model = CandidateModel(layer_sizes, unique_operator_names)
         self.task = tfrs.tasks.Retrieval(
             metrics=tfrs.metrics.FactorizedTopK(
@@ -119,6 +167,8 @@ class RetrievalModel(tfrs.models.Model):
             {
                 'customer_name': features['customer_name'],
                 'ticket_subject': features['ticket_subject'],
+                'ticket_type': features['ticket_type'],
+                'ticket_description': features['ticket_description'],
             }
         )
         candidate_embedding = self.candidate_model(features['operator_name'])
@@ -131,7 +181,7 @@ class OperatorRankingModel(tf.keras.Model):
         super().__init__()
         embedding_dimension = 32
 
-        self.user_embeddings = tf.keras.Sequential(
+        self.customer_embeddings = tf.keras.Sequential(
             [
                 tf.keras.layers.StringLookup(
                     vocabulary=unique_customer_names, mask_token=None
@@ -142,7 +192,7 @@ class OperatorRankingModel(tf.keras.Model):
             ]
         )
 
-        self.movie_embeddings = tf.keras.Sequential(
+        self.operator_embeddings = tf.keras.Sequential(
             [
                 tf.keras.layers.StringLookup(
                     vocabulary=unique_operator_names, mask_token=None
@@ -170,8 +220,8 @@ class OperatorRankingModel(tf.keras.Model):
     def call(self, inputs):
         customer_id, operator_name = inputs
 
-        customer_embedding = self.user_embeddings(customer_id)
-        operator_embedding = self.movie_embeddings(operator_name)
+        customer_embedding = self.customer_embeddings(customer_id)
+        operator_embedding = self.operator_embeddings(operator_name)
 
         return self.ratings(tf.concat([customer_embedding, operator_embedding], axis=1))
 
@@ -180,7 +230,8 @@ class RankingModel(tfrs.models.Model):
     def __init__(self, unique_customer_names, unique_operator_names):
         super().__init__()
         self.ranking_model = OperatorRankingModel(
-            unique_customer_names, unique_operator_names
+            unique_customer_names=unique_customer_names,
+            unique_operator_names=unique_operator_names,
         )
         self.task = tfrs.tasks.Ranking(
             loss=tf.keras.losses.MeanSquaredError(),
