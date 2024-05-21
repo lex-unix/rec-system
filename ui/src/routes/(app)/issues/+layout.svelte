@@ -10,6 +10,7 @@
   } from '$lib/api-utils';
   import { goto } from '$app/navigation';
   import { issues } from '$lib/stores';
+  import { ISSUE_CREATED_TOAST_MSG } from '$lib/toast-messages';
 
   onMount(async () => {
     const respone = await fetchCustomerIssues();
@@ -36,12 +37,7 @@
 
     if (!operatorResponse.ok) return;
 
-    addToast({
-      data: {
-        title: 'Issue formed',
-        description: 'New issue is registered'
-      }
-    });
+    addToast(ISSUE_CREATED_TOAST_MSG);
 
     issues.add(issueResponse.data);
 
