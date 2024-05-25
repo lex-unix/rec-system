@@ -19,19 +19,15 @@
   }
 </script>
 
-<h1 class="text-xl font-medium leading-6">Login</h1>
+<h1 class="text-xl font-medium leading-6">Зареєструватися</h1>
 <p class="text-sm text-navy-400">
-  Don&apos;t have an account? <a
-    href="/register"
-    class="underline underline-offset-2"
-  >
-    Register</a
-  >.
+  Вже маєте обліковий запис?
+  <a href="/login" class="underline underline-offset-2">Увійти</a>.
 </p>
 <hr class="mt-2 h-[1px] w-full border-0 bg-navy-800" />
 <form on:submit|preventDefault={submit} class="mt-4 flex flex-col gap-4">
   <label class="inline-block">
-    <span class="mb-2 block leading-4 text-navy-400">Email</span>
+    <span class="mb-2 block leading-4 text-navy-400">Електронна пошта</span>
     <div class="relative">
       <span
         class="pointer-events-none absolute left-2 top-1/2 flex -translate-y-1/2 items-center justify-center square-5"
@@ -47,7 +43,7 @@
     </div>
   </label>
   <label class="inline-block">
-    <span class="mb-2 block leading-4 text-navy-400">Full Name</span>
+    <span class="mb-2 block leading-4 text-navy-400">Повне ім’я</span>
     <div class="relative">
       <span
         class="pointer-events-none absolute left-2 top-1/2 flex -translate-y-1/2 items-center justify-center square-5"
@@ -63,7 +59,7 @@
     </div>
   </label>
   <label class="inline-block">
-    <span class="mb-2 block leading-4 text-navy-400">Password</span>
+    <span class="mb-2 block leading-4 text-navy-400">Пароль</span>
     <div class="relative">
       <span
         class="pointer-events-none absolute left-2 top-1/2 flex -translate-y-1/2 items-center justify-center square-5"
@@ -81,6 +77,6 @@
   <button
     class="inline-flex h-11 w-full items-center justify-center rounded-md border border-navy-200/10 bg-navy-800 px-3 font-medium focus-within:ring-2 focus-within:ring-navy-600 focus-within:ring-offset-2 focus-within:ring-offset-navy-900 focus:outline-none"
   >
-    Register
+    Зареєструватися
   </button>
 </form>

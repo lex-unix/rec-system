@@ -55,27 +55,30 @@
 <Dialog bind:this={dialog} on:close={reset}>
   <DialogTrigger class="flex w-full items-center justify-center">
     <PlusCircleIcon slot="icon" class="square-4" />
-    New issue
+    Нова заявка
   </DialogTrigger>
   <DialogContent>
-    <DialogTitle slot="title">Create new issue</DialogTitle>
+    <DialogTitle slot="title">Створити нову заявку</DialogTitle>
     <DialogDescription slot="description">
-      Start by filling out the simple form.
+      Почніть з заповнення форми.
     </DialogDescription>
     <form on:submit|preventDefault={add} class="max-w-none space-y-5">
       <div class="space-y-1">
         <Select bind:selected={issueType}>
-          <SelectLabel>Issue type</SelectLabel>
-          <SelectTrigger label="Select issue type" class="w-full max-w-none" />
+          <SelectLabel>Тип заявки:</SelectLabel>
+          <SelectTrigger
+            label="Виберіть тип заявки"
+            class="w-full max-w-none normal-case"
+          />
           <SelectMenu>
             {#each Object.entries(issueTypes) as [value, label]}
-              <SelectItem {label} {value} />
+              <SelectItem {label} {value} class="normal-case" />
             {/each}
           </SelectMenu>
         </Select>
       </div>
       <div class="space-y-1">
-        <Label for="issue-subject">Issue subject:</Label>
+        <Label for="issue-subject">Тема заявки:</Label>
         <Input
           id="issue-subject"
           name="issueSubject"
@@ -85,7 +88,7 @@
         />
       </div>
       <div class="space-y-1">
-        <Label for="">Issue description:</Label>
+        <Label for="">Опис заявки:</Label>
         <Textarea
           id="issue-description"
           name="issueDescription"
@@ -96,9 +99,9 @@
       </div>
       <div class="mt-5">
         <div class="flex items-center justify-end gap-4">
-          <Button on:click={cancel} rightIcon={XOctagonIcon}>Cancel</Button>
+          <Button on:click={cancel} rightIcon={XOctagonIcon}>Скасувати</Button>
           <Button type="submit" rightIcon={ArrowRightCircleIcon}>
-            Procced
+            Продовжити
           </Button>
         </div>
       </div>
