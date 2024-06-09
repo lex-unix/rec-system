@@ -99,6 +99,10 @@ export function fetchCustomerIssues() {
   return sendGetRequest<Issue[]>(ISSUES_ENDPOINT + '/customer');
 }
 
+export function fetchOperatorIssues() {
+  return sendGetRequest<Issue[]>(ISSUES_ENDPOINT + '/operator');
+}
+
 export function fetchCustomerIssue(id: string) {
   return sendGetRequest<Issue>(`${ISSUES_ENDPOINT}/customer/${id}`);
 }

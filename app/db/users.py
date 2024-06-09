@@ -38,9 +38,11 @@ async def get_user_by_email(conn: asyncpg.pool.PoolConnectionProxy, email: str):
 
 async def get_user_by_id(conn: asyncpg.pool.PoolConnectionProxy, user_id: int):
     sql = """
-        SELECT id, created_at, updated_at, full_name, email, password_hash
-        FROM users
-        WHERE id = $1
+        SELECT u.id, u.created_at, u.updated_at, u.full_name, u.email, u.password_hash,
+               CASE WHEN o.id IS NOT NULL THEN True ELSE False END AS is_operator
+        FROM users u
+        LEFT JOIN operators o ON u.id = o.id
+        WHERE u.id = $1
     """
     row = await conn.fetchrow(sql, user_id)
     if row is None:
@@ -51,7 +53,7 @@ async def get_user_by_id(conn: asyncpg.pool.PoolConnectionProxy, user_id: int):
 
 async def get_operator_by_name(conn: asyncpg.pool.PoolConnectionProxy, full_name: str):
     sql = """
-        SELECT u.id, u.created_at, u.updated_at, u.full_name, o.rating
+        SELECT u.id, u.email, u.created_at, u.updated_at, u.full_name, o.rating
         FROM users u
         JOIN operators o ON o.id = u.id
         WHERE u.full_name = $1 AND o.availability = TRUE
@@ -61,6 +63,7 @@ async def get_operator_by_name(conn: asyncpg.pool.PoolConnectionProxy, full_name
         return None
     operator = Operator(
         id=row['id'],
+        email=row['email'],
         created_at=row['created_at'],
         updated_at=row['updated_at'],
         rating=row['rating'],

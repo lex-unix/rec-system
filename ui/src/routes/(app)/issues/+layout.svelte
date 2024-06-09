@@ -6,16 +6,22 @@
     createChat,
     createIssue,
     fetchCustomerIssues,
-    changeOperatoravAilability
+    changeOperatoravAilability,
+    fetchOperatorIssues
   } from '$lib/api-utils';
   import { goto } from '$app/navigation';
-  import { issues } from '$lib/stores';
+  import { issues, user } from '$lib/stores';
   import { ISSUE_CREATED_TOAST_MSG } from '$lib/toast-messages';
 
   onMount(async () => {
-    const respone = await fetchCustomerIssues();
-    if (!respone.ok) return;
-    $issues = respone.data;
+    let response;
+    if ($user?.is_operator) {
+      response = await fetchOperatorIssues();
+    } else {
+      response = await fetchCustomerIssues();
+    }
+    if (!response.ok) return;
+    $issues = response.data;
   });
 
   async function addIssue(

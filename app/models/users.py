@@ -30,6 +30,7 @@ class User:
     full_name: str
     email: str
     password_hash: str
+    is_operator: bool = False
 
 
 @dataclass
@@ -39,6 +40,7 @@ class UserPublic:
     updated_at: datetime
     email: str
     full_name: str
+    is_operator: bool
 
 
 @dataclass
@@ -49,6 +51,7 @@ class Operator:
     rating: float
     availability: bool
     full_name: str
+    email: str | None = None
     resolved_issues: int = 0
 
 

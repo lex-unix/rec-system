@@ -67,6 +67,17 @@ async def get_customer_issues(conn: asyncpg.pool.PoolConnectionProxy, customer_i
     return issues
 
 
+async def get_operator_issues(conn: asyncpg.pool.PoolConnectionProxy, operator_id: int):
+    sql = """
+        SELECT i.id, i.created_at, i.updated_at, i.subject, i.description, i.type, i.status, i.customer_id
+        FROM issues i
+        WHERE i.operator_id = $1
+    """
+    rows = await conn.fetch(sql, operator_id)
+    issues = [Issue(**dict(row.items()), operator_id=1) for row in rows]
+    return issues
+
+
 async def get_issue_with_operator(
     conn: asyncpg.pool.PoolConnectionProxy,
     customer_id: int,
@@ -91,9 +102,9 @@ async def get_issue_with_operator(
         FROM issues i
         LEFT JOIN operators o ON i.operator_id = o.id
         LEFT JOIN users u ON o.id = u.id
-        WHERE i.id = $1 AND i.customer_id = $2
+        WHERE i.id = $1
     """
-    row = await conn.fetchrow(sql, issue_id, customer_id)
+    row = await conn.fetchrow(sql, issue_id)
     if not row:
         return None
 

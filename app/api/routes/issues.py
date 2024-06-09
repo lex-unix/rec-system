@@ -22,6 +22,12 @@ async def list_issues(db: DBConnDep, current_user: AuthorizeDep):
     return issues
 
 
+@router.get('/operator')
+async def list_operator_issues(db: DBConnDep, current_user: AuthorizeDep):
+    issues = await crud.get_operator_issues(conn=db, operator_id=current_user.id)
+    return issues
+
+
 @router.post('/')
 async def create_issue(
     db: DBConnDep,
@@ -43,6 +49,7 @@ async def create_issue(
             break
     if operator is None:
         raise HTTPException(status_code=503, detail='there are no available operators')
+    print(f'Selected operator: {operator.email}')
     issue = await crud.create_issue(
         conn=db,
         issue_in=issue_in,

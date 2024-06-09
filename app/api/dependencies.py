@@ -65,6 +65,7 @@ async def authorize_user(
         )
 
     user = await get_user_by_id(conn=db, user_id=user_id)
+    print(user)
     if not user:
         raise HTTPException(status_code=404, detail='user not found')
 

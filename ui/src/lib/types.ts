@@ -5,6 +5,7 @@ export type User = {
   id: number;
   full_name: string;
   email: string;
+  is_operator: boolean;
 };
 
 export type IssueType = keyof typeof issueTypes;
