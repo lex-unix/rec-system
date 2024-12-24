@@ -21,7 +21,7 @@
   <input
     type="search"
     class="h-full w-full bg-transparent pl-10 placeholder:text-navy-400 focus:outline-none"
-    placeholder="Пошук..."
+    placeholder="Search..."
     on:input={search}
   />
 </div>

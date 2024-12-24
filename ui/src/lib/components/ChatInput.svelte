@@ -19,7 +19,7 @@
       <input
         bind:value
         type="text"
-        placeholder="Написати повідомлення..."
+        placeholder="Type message..."
         class="w-full bg-navy-900 focus:outline-none"
       />
     </form>

@@ -71,11 +71,11 @@
           </PopoverTrigger>
           <PopoverContent class="min-w-[360px]">
             <div>
-              <h2 class="text-center text-lg font-medium">Налаштування чату</h2>
+              <h2 class="text-center text-lg font-medium">Chat settings</h2>
               <div class="pt-8">
                 <Switch enabled={useChatbot}>
                   <div class="flex items-center justify-between gap-3">
-                    <SwitchLabel>Використовувати чат-бот?</SwitchLabel>
+                    <SwitchLabel>Use chatbot?</SwitchLabel>
                     <SwitchButton />
                   </div>
                 </Switch>
@@ -99,12 +99,12 @@
             {#if $issue?.status !== 'closed'}
               <DropdownItem on:select={resolve}>
                 <CheckCircle2Icon class="mr-3 square-5" />
-                Закрити заявку
+                Close issue
               </DropdownItem>
             {:else}
               <DropdownItem on:select={removeIssue}>
                 <Trash2Icon class="mr-3 square-5" />
-                Видалити заявку
+                Delete issue
               </DropdownItem>
             {/if}
           </DropdownMenu>

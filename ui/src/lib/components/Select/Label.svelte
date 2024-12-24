@@ -11,6 +11,6 @@
   } = getContext<Select>('select');
 </script>
 
-<label use:melt={$label} class={cn('mb-2 block text-navy-400', className)}>
+<label use:melt={$label} class={cn('mb-1 block text-navy-400', className)}>
   <slot />
 </label>

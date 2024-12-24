@@ -7,38 +7,38 @@ type ToastData = {
 
 export const ISSUE_RESOLVED_TOAST_MSG: ToastData = {
   data: {
-    title: 'Заявку закрито',
-    description: 'Заявку закрито. Дякуємо за ваш відгук.'
+    title: 'Issue resolved',
+    description: 'Issue is now closed. Thank you for your feedback'
   }
 };
 
 export const ISSUE_RESOLVED_TOAST_ERROR_MSG: ToastData = {
   data: {
-    title: 'Не вдалося закрити заявку',
+    title: 'Failed to resolve the issue',
     description:
-      'Наразі не вдалося закрити заявку. Будь ласка, спробуйте пізніше.'
+      "We couldn't resolve the issue at the moment. Please, try again later."
   }
 };
 
 export const CHAT_LOADED_TOAST_ERROR_MSG: ToastData = {
   data: {
-    title: 'Не вдалося завантажити повідомлення',
+    title: 'Failed to load messages',
     description:
-      'Сталася помилка при завантаженні ваших чат-повідомлень. Будь ласка, спробуйте пізніше.'
+      'There was an error loading your chat messages. Please, try again later.'
   }
 };
 
 export const ISSUE_LOADED_TOAST_ERROR_MSG: ToastData = {
   data: {
-    title: 'Не вдалося завантажити заявку',
+    title: 'Failed to issue',
     description:
-      'Сталася помилка при завантаженні вашої заявки. Будь ласка, спробуйте пізніше.'
+      'There was an error loading your issue. Please try again later.'
   }
 };
 
 export const ISSUE_CREATED_TOAST_MSG: ToastData = {
   data: {
-    title: 'Заявку сформовано',
-    description: 'Очікуйте на відповідь оператора.'
+    title: 'Issue formed',
+    description: 'New issue is registered'
   }
 };

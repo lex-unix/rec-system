@@ -171,18 +171,18 @@
 
 <Dialog bind:this={dialog} on:close={reset} size="md">
   <DialogContent>
-    <DialogTitle slot="title">Позначте вашу заявку як вирішену</DialogTitle>
+    <DialogTitle slot="title">Mark your issue as resolved</DialogTitle>
     <DialogDescription slot="description">
-      Розкажіть нам про свій досвід. Це допоможе покращити наше обслуговування
-      клієнтів.
+      Tell us about your experience. This will help enhance our customer support
+      service.
     </DialogDescription>
     <div class="space-y-4">
       <div class="space-y-1">
-        <Label for="rating">Рейтинг:</Label>
+        <Label for="rating">Rating:</Label>
         <RatingSlider bind:rating />
       </div>
       <div class="space-y-1">
-        <Label for="review">Залишити відгук:</Label>
+        <Label for="review">Leave a review:</Label>
         <Textarea
           id="review"
           name="review"
@@ -193,9 +193,9 @@
     </div>
     <div class="ml-auto mt-5 flex w-full justify-end gap-5">
       <Button on:click={() => dialog.dismiss()} leftIcon={XCircleIcon}>
-        Скасувати
+        Dismiss
       </Button>
-      <Button on:click={resolve} leftIcon={CheckCircle2Icon}>Вирішити</Button>
+      <Button on:click={resolve} leftIcon={CheckCircle2Icon}>Resolve</Button>
     </div>
     <DialogClose />
   </DialogContent>
